@@ -1,0 +1,139 @@
+package nl.parkeerassistent.amsterdam.ui.screen
+
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import nl.parkeerassistent.amsterdam.R
+import nl.parkeerassistent.amsterdam.data.model.Parking
+import nl.parkeerassistent.amsterdam.ui.components.CalendarDate
+import nl.parkeerassistent.amsterdam.ui.components.LicensePlate
+import nl.parkeerassistent.amsterdam.ui.components.Property
+import nl.parkeerassistent.amsterdam.ui.components.SectionHeader
+import nl.parkeerassistent.amsterdam.ui.components.TitleBar
+import nl.parkeerassistent.amsterdam.ui.parking.ParkingViewModel
+import nl.parkeerassistent.amsterdam.ui.theme.Dimens
+import nl.parkeerassistent.amsterdam.ui.theme.ParkeerAssistentTheme
+import nl.parkeerassistent.amsterdam.ui.visitor.VisitorViewModel
+import nl.parkeerassistent.amsterdam.util.DateUtil
+import nl.parkeerassistent.amsterdam.util.License
+import java.time.LocalDate
+import java.time.YearMonth
+
+/** Parking history, grouped by month (iOS `HistoryListView`). */
+@Composable
+fun HistoryListScreen(
+    parkingVm: ParkingViewModel,
+    onOpen: (parkingId: Long) -> Unit,
+) {
+    val history by parkingVm.history.collectAsStateWithLifecycle()
+    LaunchedEffect(Unit) { parkingVm.getHistory() }
+    HistoryListContent(history = history, onOpen = onOpen)
+}
+
+@Composable
+private fun HistoryListContent(history: List<Parking>?, onOpen: (parkingId: Long) -> Unit) {
+    Column(Modifier.fillMaxSize()) {
+        TitleBar(title = stringResource(R.string.parking_history))
+        when {
+            history == null -> Box(Modifier.fillMaxSize(), Alignment.Center) { CircularProgressIndicator() }
+            history.isEmpty() -> Box(Modifier.fillMaxSize(), Alignment.Center) { Text(stringResource(R.string.parking_no_history)) }
+            else -> {
+                val groups = history.groupBy { YearMonth.from(DateUtil.toLocalDate(it.startTime) ?: LocalDate.now()) }
+                LazyColumn(Modifier.fillMaxSize().padding(horizontal = Dimens.paddingNormal)) {
+                    groups.forEach { (month, rows) ->
+                        item(key = "h-$month") {
+                            SectionHeader(
+                                DateUtil.formatMonthYear(month.atDay(1)),
+                                Modifier.padding(top = Dimens.paddingNormal, bottom = Dimens.paddingMini),
+                            )
+                        }
+                        items(rows, key = { it.id }) { row ->
+                            HistoryRow(row, onClick = { onOpen(row.id) })
+                            HorizontalDivider()
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun HistoryRow(parking: Parking, onClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(vertical = Dimens.paddingMini),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(Dimens.spacingSmall),
+    ) {
+        DateUtil.toLocalDate(parking.startTime)?.let { CalendarDate(it) }
+        LicensePlate(License.format(parking.license))
+        Text("€ ${"%.2f".format(parking.cost)}", Modifier.weight(1f), textAlign = TextAlign.End)
+    }
+}
+
+/** History detail (iOS `HistoryView`). */
+@Composable
+fun HistoryDetailScreen(
+    parkingId: Long,
+    parkingVm: ParkingViewModel,
+    visitorVm: VisitorViewModel,
+) {
+    val history by parkingVm.history.collectAsStateWithLifecycle()
+    val parking = history?.firstOrNull { it.id == parkingId }
+    HistoryDetailContent(parking = parking, name = parking?.let { visitorVm.getName(it.license) } ?: "")
+}
+
+@Composable
+private fun HistoryDetailContent(parking: Parking?, name: String) {
+    Column(Modifier.fillMaxSize()) {
+        TitleBar(title = stringResource(R.string.parking_details))
+        if (parking == null) {
+            Box(Modifier.fillMaxSize(), Alignment.Center) { Text(stringResource(R.string.parking_no_history)) }
+            return@Column
+        }
+        Column(Modifier.padding(Dimens.paddingNormal)) {
+            Box(Modifier.fillMaxWidth().padding(vertical = Dimens.paddingSmall), Alignment.Center) {
+                LicensePlate(License.format(parking.license))
+            }
+            Property(stringResource(R.string.visitor_name), name)
+            Property(stringResource(R.string.parking_cost), "€ ${"%.2f".format(parking.cost)}")
+            Property(stringResource(R.string.parking_start_time), DateUtil.formatParking(parking.startTime))
+            Property(stringResource(R.string.parking_end_time), DateUtil.formatParking(parking.endTime))
+        }
+    }
+}
+
+private val sampleHistory = listOf(
+    Parking(id = 1, license = "12ABC3", name = "Jan", startTime = "2026-05-29T14:00:00+02:00", endTime = "2026-05-29T15:00:00+02:00", cost = 1.20),
+    Parking(id = 2, license = "55ABC6", name = "Erik", startTime = "2026-04-12T10:00:00+02:00", endTime = "2026-04-12T11:30:00+02:00", cost = 2.10),
+)
+
+@Preview(showBackground = true, heightDp = 400)
+@Composable
+private fun HistoryListPreview() = ParkeerAssistentTheme { HistoryListContent(sampleHistory) {} }
+
+@Preview(showBackground = true, heightDp = 400)
+@Composable
+private fun HistoryDetailPreview() = ParkeerAssistentTheme { HistoryDetailContent(sampleHistory.first(), "Jan Jansen") }

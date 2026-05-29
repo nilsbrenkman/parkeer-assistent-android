@@ -1,0 +1,115 @@
+<resources>
+    <!-- Common -->
+    <string name="common_ok">OK</string>
+    <string name="common_add">Toevoegen</string>
+    <string name="common_back">Terug</string>
+    <string name="common_save">Opslaan</string>
+    <string name="common_delete">Verwijderen</string>
+    <string name="common_cancel">Annuleren</string>
+    <string name="common_select">Selecteer</string>
+    <string name="common_stop">Beëindigen</string>
+
+    <!-- Login -->
+    <string name="login_login">Inloggen</string>
+    <string name="login_logout">Uitloggen</string>
+    <string name="login_username">Meldcode</string>
+    <string name="login_password">Pincode</string>
+    <string name="login_remember">Onthoud inlog gegevens</string>
+    <string name="login_remember_short">Onthouden</string>
+    <string name="login_reason">Opgeslagen inlog gegevens laden</string>
+    <string name="login_failed">Inloggegevens komen niet overeen</string>
+    <string name="login_error">Inloggen mislukt</string>
+
+    <!-- Account -->
+    <string name="account_header">Accounts</string>
+    <string name="account_new_account">Nieuwe account</string>
+    <string name="account_details">Account details</string>
+    <string name="account_label">Account</string>
+    <string name="account_alias">Omschrijving</string>
+    <string name="account_auto_login">Automatisch inloggen</string>
+    <string name="account_confirm_delete">Account verwijderen?</string>
+    <string name="account_error_unavailable">FaceID is niet beschikbaar</string>
+    <string name="account_error_failed">Authenticatie mislukt</string>
+    <string name="account_save_failed">Account kan niet worden opgeslagen</string>
+    <string name="account_delete_failed">Account kan niet worden verwijderd</string>
+    <string name="account_biometric_unavailable">Biometrische ontgrendeling is niet beschikbaar</string>
+    <string name="account_unlock">Ontgrendel je opgeslagen accounts</string>
+
+    <!-- Menu -->
+    <string name="menu_button">Menu</string>
+
+    <!-- User -->
+    <string name="user_balance">Saldo</string>
+    <string name="user_add_balance">Saldo opwaarderen</string>
+
+    <!-- Visitor -->
+    <string name="visitor_header">Bezoekers</string>
+    <string name="visitor_no_visitors">Voeg een bezoeker toe</string>
+    <string name="visitor_add">Nieuwe bezoeker</string>
+    <string name="visitor_license">Kenteken</string>
+    <string name="visitor_name">Naam</string>
+    <string name="visitor_too_many_msg">Je kan maximaal 9 bezoekers bewaren. Verwijder een bezoeker om een nieuwe toe te kunnen voegen.</string>
+
+    <!-- Parking -->
+    <string name="parking_header">Parkeren</string>
+    <string name="parking_start">Nieuwe sessie</string>
+    <string name="parking_active">Actieve sessies</string>
+    <string name="parking_scheduled">Geplande sessies</string>
+    <string name="parking_no_sessions">Geen actieve of geplande sessies</string>
+    <string name="parking_date">Datum</string>
+    <string name="parking_start_time">Start tijd</string>
+    <string name="parking_end_time">Eind tijd</string>
+    <string name="parking_minutes">Minuten</string>
+    <string name="parking_cost">Kosten</string>
+    <string name="parking_stop">Sessie beëindigen</string>
+    <string name="parking_history">Parkeer geschiedenis</string>
+    <string name="parking_details">Parkeer details</string>
+    <string name="parking_no_history">Geen parkeer geschiedenis gevonden</string>
+    <string name="parking_free_parking">U kan in vandaag gratis parkeren</string>
+    <string name="parking_sign">Bord</string>
+    <string name="parking_invalid_zone">Ongeldige zone</string>
+
+    <!-- Payment -->
+    <string name="payment_amount">Bedrag</string>
+    <string name="payment_bank">Betaalmethode</string>
+    <string name="payment_start">Opwaarderen</string>
+    <string name="payment_status">Controleer status</string>
+    <string name="payment_in_progress">Betaling is in behandeling</string>
+    <string name="payment_recipient_msg">Let op: controleer altijd of de begunstigde van de betaling Gemeente Amsterdam is.</string>
+    <string name="payment_redirect_msg">Na afloop van de betaling zal je doorgestuurd worden naar de website van de gemeente. Log niet in maar open deze app om de betaling af te ronden.</string>
+    <string name="payment_redirect_error_msg">Fout bij het starten van de betaling.</string>
+    <string name="payment_success_msg">Opwaarderen van het geldsaldo is gelukt.</string>
+    <string name="payment_pending_msg">Opwaarderen van het geldsaldo is nog bezig.</string>
+    <string name="payment_error_msg">Er is een fout opgetreden tijdens de betaling.\n\nControleer in je bank app of de betaling geslaagd is voor je het opnieuw probeert. Het kan enige tijd duren voor de betaling verwerkt is.</string>
+    <string name="payment_unknown_msg">Status van de betaling kan niet worden geverifieerd.\n\nControleer in je bank app of de betaling geslaagd is voor je het opnieuw probeert. Het kan enige tijd duren voor de betaling verwerkt is.</string>
+
+    <!-- Settings -->
+    <string name="settings_header">Instellingen</string>
+    <string name="settings_notifications">Notificaties</string>
+    <string name="settings_on_start">Begin van sessie</string>
+    <string name="settings_on_stop">Einde van sessie</string>
+    <string name="settings_reminders">Herinneringen</string>
+
+    <!-- Info -->
+    <string name="info_header">Over deze app</string>
+    <string name="info_text1">Parkeren Amsterdam is een persoonlijke app die niet verbonden is aan de gemeente Amsterdam.</string>
+    <string name="info_text2">Het doel van de app is het bieden van een alternatieve, meer gebruiksvriendelijke interface voor de website van de gemeente.</string>
+    <string name="info_text3">De app verzamelt geen gebruikersdata zoals meldcode, pincode of enige andere persoonlijke gegevens. Als je ervoor kiest je inlog gegevens te onthouden worden deze lokaal en veilig bewaard.</string>
+    <string name="info_text4">De maker van de app is niet aansprakelijk voor enige vorm van gebruik.</string>
+    <string name="info_text5">De broncode van deze app is open source en beschikbaar via GitHub.</string>
+    <string name="info_text6">Werkt iets niet of heb je een suggestie? Laat me weten wat je van de app vindt.</string>
+    <string name="info_website">Website</string>
+    <string name="info_source_code">Broncode</string>
+    <string name="info_feedback">Feedback</string>
+    <string name="info_version">Versie</string>
+
+    <!-- Error -->
+    <string name="error_unauthorized">Je bent uitgelogd</string>
+    <string name="error_server_unknown">Onbekende server fout</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_name">Parkeren</string>
+    <string name="notification_start_title">Parkeer sessie begint</string>
+    <string name="notification_end_title">Parkeer sessie loopt af</string>
+    <string name="notification_reminder_title">Herinnering</string>
+</resources>

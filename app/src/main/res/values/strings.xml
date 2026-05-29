@@ -1,0 +1,117 @@
+<resources>
+    <string name="app_name">Parkeer Assistent</string>
+
+    <!-- Common -->
+    <string name="common_ok">OK</string>
+    <string name="common_add">Add</string>
+    <string name="common_back">Back</string>
+    <string name="common_save">Save</string>
+    <string name="common_delete">Delete</string>
+    <string name="common_cancel">Cancel</string>
+    <string name="common_select">Select</string>
+    <string name="common_stop">Stop</string>
+
+    <!-- Login -->
+    <string name="login_login">Login</string>
+    <string name="login_logout">Logout</string>
+    <string name="login_username">Permit code</string>
+    <string name="login_password">Pin code</string>
+    <string name="login_remember">Remember login credentials</string>
+    <string name="login_remember_short">Remember</string>
+    <string name="login_reason">Loading stored login credentials</string>
+    <string name="login_failed">Incorrect credentials</string>
+    <string name="login_error">Login failed</string>
+
+    <!-- Account -->
+    <string name="account_header">Accounts</string>
+    <string name="account_new_account">New account</string>
+    <string name="account_details">Account details</string>
+    <string name="account_label">Account</string>
+    <string name="account_alias">Description</string>
+    <string name="account_auto_login">Automatic login</string>
+    <string name="account_confirm_delete">Delete account?</string>
+    <string name="account_error_unavailable">FaceID is not available</string>
+    <string name="account_error_failed">Authentication failed</string>
+    <string name="account_save_failed">Could not save account</string>
+    <string name="account_delete_failed">Could not delete account</string>
+    <string name="account_biometric_unavailable">Biometric unlock is not available</string>
+    <string name="account_unlock">Unlock your stored accounts</string>
+
+    <!-- Menu -->
+    <string name="menu_button">Menu</string>
+
+    <!-- User -->
+    <string name="user_balance">Balance</string>
+    <string name="user_add_balance">Add balance</string>
+
+    <!-- Visitor -->
+    <string name="visitor_header">Visitors</string>
+    <string name="visitor_no_visitors">No visitors</string>
+    <string name="visitor_add">Add visitor</string>
+    <string name="visitor_license">License</string>
+    <string name="visitor_name">Name</string>
+    <string name="visitor_too_many_msg">You have stored the maximum number of visitors. Delete a visitor to be able to add a new one.</string>
+
+    <!-- Parking -->
+    <string name="parking_header">Parking</string>
+    <string name="parking_start">New session</string>
+    <string name="parking_active">Active sessions</string>
+    <string name="parking_scheduled">Scheduled sessions</string>
+    <string name="parking_no_sessions">No active or scheduled sessions</string>
+    <string name="parking_date">Date</string>
+    <string name="parking_start_time">Start</string>
+    <string name="parking_end_time">End</string>
+    <string name="parking_minutes">Minutes</string>
+    <string name="parking_cost">Cost</string>
+    <string name="parking_stop">Stop session</string>
+    <string name="parking_history">Parking history</string>
+    <string name="parking_details">Parking details</string>
+    <string name="parking_no_history">No parking history found</string>
+    <string name="parking_free_parking">You can park for free today</string>
+    <string name="parking_sign">Sign</string>
+    <string name="parking_invalid_zone">Invalid zone</string>
+
+    <!-- Payment -->
+    <string name="payment_amount">Amount</string>
+    <string name="payment_bank">Payment method</string>
+    <string name="payment_start">Add funds</string>
+    <string name="payment_status">Check status</string>
+    <string name="payment_in_progress">Payment in progress</string>
+    <string name="payment_recipient_msg">Attention: always check whether the beneficiary of the payment is the Municipality of Amsterdam</string>
+    <string name="payment_redirect_msg">After authorising the payment, you will be forwarded to the municipality\'s website. Do not log in but open this app to complete the payment.</string>
+    <string name="payment_redirect_error_msg">Error during payment initialization.</string>
+    <string name="payment_success_msg">Successfully added funds to your balance.</string>
+    <string name="payment_pending_msg">Payment is still in progress.</string>
+    <string name="payment_error_msg">An error occurred during payment.\n\nCheck your bank app if the payment was successful before trying again. It may take some time for the payment to be processed.</string>
+    <string name="payment_unknown_msg">Status of the payment can not be verified.\n\nCheck your bank app if the payment was successful before trying again. It may take some time for the payment to be processed.</string>
+
+    <!-- Settings -->
+    <string name="settings_header">Settings</string>
+    <string name="settings_notifications">Notifications</string>
+    <string name="settings_on_start">On start of session</string>
+    <string name="settings_on_stop">On end of session</string>
+    <string name="settings_reminders">Reminders</string>
+
+    <!-- Info -->
+    <string name="info_header">About this app</string>
+    <string name="info_text1">Parking Amsterdam is a personal app that is not affiliated with the Municipality of Amsterdam.</string>
+    <string name="info_text2">The purpose of the app is to provide an alternative, more user-friendly interface to the municipality\'s website.</string>
+    <string name="info_text3">The app does not collect user data such as permit code, pin code or any other personal data. If you choose to remember your login credentials, they will be stored locally and securely.</string>
+    <string name="info_text4">The creator of this app is not liable for any kind of use.</string>
+    <string name="info_text5">You can inspect the source code of this app on GitHub.</string>
+    <string name="info_text6">Did you encounter an issue or do you have a suggestion? Please let me know!</string>
+    <string name="info_website">Website</string>
+    <string name="info_source_code">Source code</string>
+    <string name="info_feedback">Feedback</string>
+    <string name="info_version">Version</string>
+
+    <!-- Error -->
+    <string name="error_unauthorized">Your login session has expired</string>
+    <string name="error_server_unknown">Unknown server error</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_name">Parking</string>
+    <string name="notification_start_title">Parking session started</string>
+    <string name="notification_end_title">Parking session ending</string>
+    <string name="notification_reminder_title">Reminder</string>
+</resources>
