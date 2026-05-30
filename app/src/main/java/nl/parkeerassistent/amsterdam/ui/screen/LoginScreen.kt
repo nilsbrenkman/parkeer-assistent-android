@@ -131,7 +131,7 @@ fun LoginScreen(
 }
 
 @Composable
-private fun LoginContent(
+internal fun LoginContent(
     username: String,
     password: String,
     storeCredentials: Boolean,

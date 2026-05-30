@@ -50,7 +50,7 @@ fun AddVisitorScreen(
 }
 
 @Composable
-private fun AddVisitorContent(
+internal fun AddVisitorContent(
     license: String,
     name: String,
     onLicenseChange: (String) -> Unit,

@@ -136,7 +136,7 @@ fun UserScreen(
 }
 
 @Composable
-private fun UserContent(
+internal fun UserContent(
     balance: String?,
     parking: ParkingResponse?,
     visitors: List<Visitor>?,

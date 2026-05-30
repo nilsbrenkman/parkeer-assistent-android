@@ -33,8 +33,10 @@ flavors.
 | `./gradlew lint` | Android Lint |
 
 **Running/verifying on the emulator** (SDK tools under `~/Library/Android/sdk/{platform-tools,emulator}`, not on PATH):
-boot the `PAX_A920Pro` AVD headless (`emulator -avd PAX_A920Pro -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect &`),
-`adb wait-for-device`, `installDebug`, launch `nl.parkeerassistent.amsterdam/.MainActivity`. The
+boot the available AVD headless — check `emulator -list-avds` (currently `Pixel_4`) —
+(`emulator -avd Pixel_4 -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect &`),
+`adb wait-for-device`, `installDebug`, launch `nl.parkeerassistent.amsterdam/.MainActivity`.
+Compose UI tests run there via `./gradlew connectedDebugAndroidTest`. The
 build hits the **public** server; for deterministic data the `X-ParkeerAssistent-Mock: true` header
 (in `AnalyticsHeadersInterceptor`) uses the server's mock mode — **login `test` / `1234`**. OkHttp
 BODY logging + Koin definitions print to logcat (grep `okhttp.OkHttpClient`, `[Koin]`, `FATAL`).

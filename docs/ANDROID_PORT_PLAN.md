@@ -308,10 +308,14 @@ the current Snackbar) and the payment success-poll are also fan-out/polish items
   `StatsStore`/`PrefsStatsStore`, `ParkingNotifications`/`AlarmParkingNotifications` — so VMs are
   fakeable on plain JVM (Robolectric would choke on the Keystore-backed credential store). DI binds
   `single<Interface> { Impl(...) }`.
+- ✅ **Compose UI tests** (`app/src/androidTest`, run via `connectedDebugAndroidTest` on the
+  emulator — 9 tests green): exercise the stateless `*Content` composables directly (no Koin) —
+  `LoginContentTest` (button enable/disable + click + remember toggle), `AddVisitorContentTest`
+  (enable/disable + click + field labels), `UserContentTest` (renders visitor + empty parking,
+  add-visitor callback). The `*Content` composables tested were made `internal` (visible to the
+  androidTest source set); strings read via `targetContext.getString`.
 - ✅ App icon + logo (see Phase 5 note); edge-to-edge (`enableEdgeToEdge`); dark theme via
   `LocalAppColors` dark variants + Material dark scheme.
-- ⬜ **Compose UI tests** (login→user→add-parking) — deferred; needs the instrumented runner +
-  Koin module overrides with fakes.
 - ⬜ iOS-style confirmation **dialogs** (vs the current Snackbar) — deferred by request.
 
 ## iOS → Android mapping (quick reference)
