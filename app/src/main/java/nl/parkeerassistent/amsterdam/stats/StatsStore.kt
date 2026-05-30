@@ -2,11 +2,18 @@ package nl.parkeerassistent.amsterdam.stats
 
 import android.content.Context
 
-/**
- * Usage stats that gate the in-app review prompt (port of iOS `Stats`). Stored in
- * SharedPreferences; `firstLogin` is set when the store is first created.
- */
-class StatsStore(context: Context) {
+/** Usage stats that gate the in-app review prompt (port of iOS `Stats`). */
+interface StatsStore {
+    fun incrementLogin()
+    fun incrementVisitor()
+    fun incrementParking()
+    fun incrementPayment()
+    fun shouldRequestReview(): Boolean
+    fun markRequested()
+}
+
+/** SharedPreferences-backed stats; `firstLogin` is set when first created. */
+class PrefsStatsStore(context: Context) : StatsStore {
 
     private val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
@@ -16,13 +23,13 @@ class StatsStore(context: Context) {
         }
     }
 
-    fun incrementLogin() = increment(KEY_LOGIN_COUNT)
-    fun incrementVisitor() = increment(KEY_VISITOR_COUNT)
-    fun incrementParking() = increment(KEY_PARKING_COUNT)
-    fun incrementPayment() = increment(KEY_PAYMENT_COUNT)
+    override fun incrementLogin() = increment(KEY_LOGIN_COUNT)
+    override fun incrementVisitor() = increment(KEY_VISITOR_COUNT)
+    override fun incrementParking() = increment(KEY_PARKING_COUNT)
+    override fun incrementPayment() = increment(KEY_PAYMENT_COUNT)
 
     /** Port of iOS `Stats.requestReview()`: enough activity, and not asked in the last ~26 weeks. */
-    fun shouldRequestReview(): Boolean {
+    override fun shouldRequestReview(): Boolean {
         val now = System.currentTimeMillis()
         val requested = prefs.getLong(KEY_REQUESTED, 0L)
         if (requested != 0L && now - requested < WEEKS_26_MS) return false
@@ -35,7 +42,7 @@ class StatsStore(context: Context) {
         return actions >= 10
     }
 
-    fun markRequested() {
+    override fun markRequested() {
         prefs.edit().putLong(KEY_REQUESTED, System.currentTimeMillis()).apply()
     }
 

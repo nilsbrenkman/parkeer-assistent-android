@@ -19,11 +19,15 @@ import nl.parkeerassistent.amsterdam.data.repository.UserRepositoryImpl
 import nl.parkeerassistent.amsterdam.data.repository.VisitorRepository
 import nl.parkeerassistent.amsterdam.data.repository.VisitorRepositoryImpl
 import nl.parkeerassistent.amsterdam.data.local.CredentialStore
+import nl.parkeerassistent.amsterdam.data.local.EncryptedCredentialStore
 import nl.parkeerassistent.amsterdam.location.LocationProvider
+import nl.parkeerassistent.amsterdam.notifications.AlarmParkingNotifications
 import nl.parkeerassistent.amsterdam.notifications.NotificationSettings
 import nl.parkeerassistent.amsterdam.notifications.ParkingNotifications
 import nl.parkeerassistent.amsterdam.review.AppReview
+import nl.parkeerassistent.amsterdam.stats.PrefsStatsStore
 import nl.parkeerassistent.amsterdam.stats.StatsStore
+import nl.parkeerassistent.amsterdam.util.AndroidStringProvider
 import nl.parkeerassistent.amsterdam.util.StringProvider
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -33,15 +37,15 @@ import retrofit2.create
 val dataModule = module {
 
     // Local persistence + resources
-    single { CredentialStore(androidContext()) }
-    single { StringProvider(androidContext()) }
+    single<CredentialStore> { EncryptedCredentialStore(androidContext()) }
+    single<StringProvider> { AndroidStringProvider(androidContext()) }
 
     // Notifications
     single { NotificationSettings(androidContext()) }
-    single { ParkingNotifications(androidContext(), get()) }
+    single<ParkingNotifications> { AlarmParkingNotifications(androidContext(), get()) }
 
     // Stats + in-app review
-    single { StatsStore(androidContext()) }
+    single<StatsStore> { PrefsStatsStore(androidContext()) }
     single { AppReview(androidContext()) }
 
     // Location

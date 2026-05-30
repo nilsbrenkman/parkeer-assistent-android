@@ -293,17 +293,25 @@ the current Snackbar) and the payment success-poll are also fan-out/polish items
   (previously hardcoded Dutch). Interval labels / brand names (iDEAL, €) stay literal.
 
 ### Phase 8 — Testing & polish (in progress)
-- ✅ **JVM unit tests** (`./gradlew test`, JUnit4, no Android/Robolectric): `util/LicenseTest`
-  (all 5 sidecodes + normalisation + no-match), `util/DateUtilTest` (cost, time-balance,
-  regime-day mapping, parking-time formatting), and `data/repository/RepositoryTest`
-  (MockWebServer — exercises the 6 Retrofit interfaces + repos + kotlinx-serialization: HTTP
-  method/path, request bodies, response decoding, list-unwrapping). ~22 tests, green.
+**36 JVM unit tests, all green** (`./gradlew test`, JUnit4, no Android/Robolectric):
+- ✅ `util/LicenseTest` (all 5 sidecodes + normalisation + no-match), `util/DateUtilTest` (cost,
+  time-balance, regime-day mapping, parking-time formatting).
+- ✅ `data/repository/RepositoryTest` (MockWebServer — the 6 Retrofit interfaces + repos +
+  kotlinx-serialization: HTTP method/path, request bodies, response decoding, list-unwrapping).
+- ✅ **ViewModel tests** (`SessionViewModelTest` 8, `VisitorViewModelTest` 3, `UserViewModelTest`
+  2): login success/failure/throw, remember→credential storage, `checkLoggedIn`, unauthorized→drop
+  session, `consumeAutoLogin` one-shot, logout; visitor sort order + notifications feed + add/
+  getName; getUser/getBalance state + time-balance. Uses `MainDispatcherRule`
+  (`UnconfinedTestDispatcher`) + `Fakes.kt`.
+- **Testability enabler:** extracted interfaces for the Context-backed collaborators —
+  `StringProvider`/`AndroidStringProvider`, `CredentialStore`/`EncryptedCredentialStore`,
+  `StatsStore`/`PrefsStatsStore`, `ParkingNotifications`/`AlarmParkingNotifications` — so VMs are
+  fakeable on plain JVM (Robolectric would choke on the Keystore-backed credential store). DI binds
+  `single<Interface> { Impl(...) }`.
 - ✅ App icon + logo (see Phase 5 note); edge-to-edge (`enableEdgeToEdge`); dark theme via
   `LocalAppColors` dark variants + Material dark scheme.
-- ⬜ **ViewModel tests** — deferred: VMs depend on Context-backed singletons (`StringProvider`,
-  `CredentialStore`, `StatsStore`, `ParkingNotifications`), so they need Robolectric or extracting
-  those to interfaces first. Repos/util (the highest bug-risk: serialization + parsing) are covered.
-- ⬜ **Compose UI tests** (login→user→add-parking) — deferred; needs the instrumented runner.
+- ⬜ **Compose UI tests** (login→user→add-parking) — deferred; needs the instrumented runner +
+  Koin module overrides with fakes.
 - ⬜ iOS-style confirmation **dialogs** (vs the current Snackbar) — deferred by request.
 
 ## iOS → Android mapping (quick reference)

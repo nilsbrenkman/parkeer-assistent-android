@@ -9,11 +9,20 @@ import nl.parkeerassistent.amsterdam.data.model.Credentials
 import nl.parkeerassistent.amsterdam.util.Log
 
 /**
- * Android counterpart of the iOS `Keychain`: stores the saved-credentials list in
- * EncryptedSharedPreferences (AES via the Android Keystore), plus the "recent" username and the
- * auto-login flag. Upsert/update/delete semantics mirror the iOS implementation (keyed by username).
+ * Android counterpart of the iOS `Keychain`: the saved-credentials list + "recent" username +
+ * auto-login flag. Upsert/update/delete are keyed by username (mirrors iOS).
  */
-class CredentialStore(context: Context) {
+interface CredentialStore {
+    fun retrieve(): List<Credentials>
+    fun store(username: String, password: String, alias: String?)
+    fun update(account: Credentials, username: String, password: String, alias: String?)
+    fun delete(account: Credentials)
+    var recent: String?
+    var autoLoginEnabled: Boolean
+}
+
+/** Stores credentials in EncryptedSharedPreferences (AES via the Android Keystore). */
+class EncryptedCredentialStore(context: Context) : CredentialStore {
 
     private val prefs = EncryptedSharedPreferences.create(
         context,
@@ -25,7 +34,7 @@ class CredentialStore(context: Context) {
     private val json = Json { ignoreUnknownKeys = true }
     private val serializer = ListSerializer(Credentials.serializer())
 
-    fun retrieve(): List<Credentials> {
+    override fun retrieve(): List<Credentials> {
         val raw = prefs.getString(KEY_LIST, null) ?: return emptyList()
         return runCatching { json.decodeFromString(serializer, raw) }
             .onFailure { Log.warning("CredentialStore decode failed: ${it.message}") }
@@ -36,7 +45,7 @@ class CredentialStore(context: Context) {
         prefs.edit().putString(KEY_LIST, json.encodeToString(serializer, list)).apply()
     }
 
-    fun store(username: String, password: String, alias: String?) {
+    override fun store(username: String, password: String, alias: String?) {
         val list = retrieve().toMutableList()
         val i = list.indexOfFirst { it.username == username }
         if (i >= 0) {
@@ -47,7 +56,7 @@ class CredentialStore(context: Context) {
         persist(list)
     }
 
-    fun update(account: Credentials, username: String, password: String, alias: String?) {
+    override fun update(account: Credentials, username: String, password: String, alias: String?) {
         val list = retrieve().toMutableList()
         val i = list.indexOfFirst { it.username == account.username }
         if (i >= 0) {
@@ -56,17 +65,16 @@ class CredentialStore(context: Context) {
         }
     }
 
-    fun delete(account: Credentials) {
+    override fun delete(account: Credentials) {
         val list = retrieve().toMutableList()
         if (list.removeAll { it.username == account.username }) persist(list)
     }
 
-    var recent: String?
+    override var recent: String?
         get() = prefs.getString(KEY_RECENT, null)
         set(value) = prefs.edit().putString(KEY_RECENT, value).apply()
 
-    /** Mirrors iOS `Keychain.autoLogin()` (stored as a "disabled" flag, defaulting to enabled). */
-    var autoLoginEnabled: Boolean
+    override var autoLoginEnabled: Boolean
         get() = !prefs.getBoolean(KEY_AUTO_LOGIN_DISABLED, false)
         set(value) = prefs.edit().putBoolean(KEY_AUTO_LOGIN_DISABLED, !value).apply()
 

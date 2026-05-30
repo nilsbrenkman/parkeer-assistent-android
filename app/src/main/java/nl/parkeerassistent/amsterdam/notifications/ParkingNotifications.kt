@@ -14,18 +14,30 @@ import nl.parkeerassistent.amsterdam.util.DateUtil
 import nl.parkeerassistent.amsterdam.util.License
 
 /**
- * Schedules local parking notifications (port of iOS `Notifications`). On each parking refresh it
- * cancels the previous alarms and reschedules start/end/reminder notifications via [AlarmManager];
- * [NotificationReceiver] posts them. Gated by [NotificationSettings].
+ * Schedules local parking notifications (port of iOS `Notifications`): start/end/reminder
+ * notifications for the current sessions. [visitors] is fed from the visitor list for the subtitle.
  */
-class ParkingNotifications(
+interface ParkingNotifications {
+    var visitors: List<Visitor>
+    fun onParking(response: ParkingResponse)
+
+    companion object {
+        const val CHANNEL_ID = "parking"
+    }
+}
+
+/**
+ * Reschedules notifications via [AlarmManager] (cancelling the previous set) on each parking
+ * refresh; [NotificationReceiver] posts them. Gated by [NotificationSettings].
+ */
+class AlarmParkingNotifications(
     private val context: Context,
     private val settings: NotificationSettings,
-) {
+) : ParkingNotifications {
 
     /** Set by the visitor list (iOS `Notifications.store.visitors`); used for the subtitle. */
     @Volatile
-    var visitors: List<Visitor> = emptyList()
+    override var visitors: List<Visitor> = emptyList()
 
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     private val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
@@ -34,7 +46,7 @@ class ParkingNotifications(
         createChannel()
     }
 
-    fun onParking(response: ParkingResponse) {
+    override fun onParking(response: ParkingResponse) {
         cancelAll()
         val codes = mutableListOf<Int>()
         response.active.forEach {
@@ -126,14 +138,13 @@ class ParkingNotifications(
     private fun createChannel() {
         val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val name = context.getString(nl.parkeerassistent.amsterdam.R.string.notification_channel_name)
-        val channel = NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_HIGH)
+        val channel = NotificationChannel(ParkingNotifications.CHANNEL_ID, name, NotificationManager.IMPORTANCE_HIGH)
         manager.createNotificationChannel(channel)
     }
 
-    companion object {
-        const val CHANNEL_ID = "parking"
-        private const val PREFS = "notif_alarms"
-        private const val KEY_CODES = "codes"
-        private const val KEY_NEXT_CODE = "nextCode"
+    private companion object {
+        const val PREFS = "notif_alarms"
+        const val KEY_CODES = "codes"
+        const val KEY_NEXT_CODE = "nextCode"
     }
 }
