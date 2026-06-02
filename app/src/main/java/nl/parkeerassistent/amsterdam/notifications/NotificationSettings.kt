@@ -1,6 +1,7 @@
 package nl.parkeerassistent.amsterdam.notifications
 
 import android.content.Context
+import nl.parkeerassistent.amsterdam.notifications.NotificationSettings.Companion.INTERVAL_MINUTES
 
 /**
  * Persisted notification preferences (iOS `Notifications` UserDefaults keys). Defaults to enabled

@@ -1,7 +1,6 @@
 package nl.parkeerassistent.amsterdam.ui.screen
 
 import android.content.Intent
-import androidx.core.net.toUri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.core.net.toUri
 import nl.parkeerassistent.amsterdam.R
 import nl.parkeerassistent.amsterdam.ui.components.TitleBar
 import nl.parkeerassistent.amsterdam.ui.theme.AppTheme

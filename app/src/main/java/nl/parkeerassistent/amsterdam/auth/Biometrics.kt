@@ -6,9 +6,9 @@ import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
+import kotlinx.coroutines.suspendCancellableCoroutine
 import nl.parkeerassistent.amsterdam.R
 import kotlin.coroutines.resume
-import kotlinx.coroutines.suspendCancellableCoroutine
 
 /** Outcome of a biometric check, mirroring the iOS `AuthenticationError` cases. */
 enum class BiometricResult { Success, Failed, Unavailable }

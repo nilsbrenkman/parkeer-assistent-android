@@ -19,7 +19,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import nl.parkeerassistent.amsterdam.R
@@ -30,11 +29,13 @@ import nl.parkeerassistent.amsterdam.ui.components.Property
 import nl.parkeerassistent.amsterdam.ui.components.SectionHeader
 import nl.parkeerassistent.amsterdam.ui.components.TitleBar
 import nl.parkeerassistent.amsterdam.ui.parking.ParkingViewModel
+import nl.parkeerassistent.amsterdam.ui.theme.AppType
 import nl.parkeerassistent.amsterdam.ui.theme.Dimens
 import nl.parkeerassistent.amsterdam.ui.theme.ParkeerAssistentTheme
 import nl.parkeerassistent.amsterdam.ui.visitor.VisitorViewModel
 import nl.parkeerassistent.amsterdam.util.DateUtil
 import nl.parkeerassistent.amsterdam.util.License
+import nl.parkeerassistent.amsterdam.util.VisitorNameCache
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -89,7 +90,7 @@ private fun HistoryRow(parking: Parking, onClick: () -> Unit) {
     ) {
         DateUtil.toLocalDate(parking.startTime)?.let { CalendarDate(it) }
         LicensePlate(License.format(parking.license))
-        Text("€ ${"%.2f".format(parking.cost)}", Modifier.weight(1f), textAlign = TextAlign.End)
+        Text(VisitorNameCache.map[parking.license] ?: "", style = AppType.name)
     }
 }
 

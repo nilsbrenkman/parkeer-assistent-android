@@ -1,5 +1,7 @@
 package nl.parkeerassistent.amsterdam.di
 
+import nl.parkeerassistent.amsterdam.data.local.CredentialStore
+import nl.parkeerassistent.amsterdam.data.local.EncryptedCredentialStore
 import nl.parkeerassistent.amsterdam.data.remote.GeoApi
 import nl.parkeerassistent.amsterdam.data.remote.LoginApi
 import nl.parkeerassistent.amsterdam.data.remote.ParkingApi
@@ -18,8 +20,6 @@ import nl.parkeerassistent.amsterdam.data.repository.UserRepository
 import nl.parkeerassistent.amsterdam.data.repository.UserRepositoryImpl
 import nl.parkeerassistent.amsterdam.data.repository.VisitorRepository
 import nl.parkeerassistent.amsterdam.data.repository.VisitorRepositoryImpl
-import nl.parkeerassistent.amsterdam.data.local.CredentialStore
-import nl.parkeerassistent.amsterdam.data.local.EncryptedCredentialStore
 import nl.parkeerassistent.amsterdam.location.LocationProvider
 import nl.parkeerassistent.amsterdam.notifications.AlarmParkingNotifications
 import nl.parkeerassistent.amsterdam.notifications.NotificationSettings

@@ -14,6 +14,7 @@ import nl.parkeerassistent.amsterdam.ui.common.ApiErrorHandler
 import nl.parkeerassistent.amsterdam.ui.common.MessageBus
 import nl.parkeerassistent.amsterdam.ui.common.MessageType
 import nl.parkeerassistent.amsterdam.util.Log
+import nl.parkeerassistent.amsterdam.util.VisitorNameCache
 
 /** Port of iOS `VisitorStore`. `null` means "not yet loaded". */
 class VisitorViewModel(
@@ -40,6 +41,8 @@ class VisitorViewModel(
             if (sorted == _visitors.value) return@launch
             _visitors.value = sorted
             notifications.visitors = sorted
+            VisitorNameCache.map.clear()
+            sorted.forEach { VisitorNameCache.map[it.license] = it.name ?: "" }
         }
     }
 

@@ -1,7 +1,6 @@
 package nl.parkeerassistent.amsterdam.ui.screen
 
 import android.content.Intent
-import androidx.core.net.toUri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import nl.parkeerassistent.amsterdam.R
 import nl.parkeerassistent.amsterdam.ui.components.ButtonWait

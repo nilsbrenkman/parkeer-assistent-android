@@ -42,11 +42,12 @@ import nl.parkeerassistent.amsterdam.ui.components.LicensePlate
 import nl.parkeerassistent.amsterdam.ui.components.SectionHeader
 import nl.parkeerassistent.amsterdam.ui.parking.ParkingViewModel
 import nl.parkeerassistent.amsterdam.ui.theme.AppTheme
+import nl.parkeerassistent.amsterdam.ui.theme.AppType
 import nl.parkeerassistent.amsterdam.ui.theme.Dimens
 import nl.parkeerassistent.amsterdam.ui.theme.ParkeerAssistentTheme
 import nl.parkeerassistent.amsterdam.ui.user.UserViewModel
 import nl.parkeerassistent.amsterdam.ui.visitor.VisitorViewModel
-import nl.parkeerassistent.amsterdam.util.DateUtil
+import nl.parkeerassistent.amsterdam.util.VisitorNameCache
 import nl.parkeerassistent.amsterdam.util.findActivity
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
@@ -165,8 +166,17 @@ internal fun UserContent(
             if (active.isEmpty() && scheduled.isEmpty()) {
                 item { Text(stringResource(R.string.parking_no_sessions)) }
             } else {
-                items(active + scheduled, key = { it.id }) { p ->
-                    ParkingRow(p, onStop = { actions.onStop(p) })
+                if (active.isNotEmpty()) {
+                    item { Text(stringResource(R.string.parking_active)) }
+                    items(active, key = { it.id }) { p ->
+                        ParkingRow(p, onStop = { actions.onStop(p) })
+                    }
+                }
+                if (scheduled.isNotEmpty()) {
+                    item { Text(stringResource(R.string.parking_scheduled)) }
+                    items(scheduled, key = { it.id }) { p ->
+                        ParkingRow(p, onStop = { actions.onStop(p) })
+                    }
                 }
             }
 
@@ -244,7 +254,7 @@ private fun VisitorRow(visitor: Visitor, onClick: () -> Unit, onDelete: () -> Un
             horizontalArrangement = Arrangement.spacedBy(Dimens.spacingSmall),
         ) {
             LicensePlate(visitor.license)
-            Text(visitor.name ?: "", fontWeight = FontWeight.SemiBold)
+            Text(visitor.name ?: "", style = AppType.name)
         }
     }
 }
@@ -258,11 +268,7 @@ private fun ParkingRow(parking: Parking, onStop: () -> Unit) {
             horizontalArrangement = Arrangement.spacedBy(Dimens.spacingSmall),
         ) {
             LicensePlate(parking.license)
-            Column(Modifier.weight(1f)) {
-                parking.name?.let { Text(it, fontWeight = FontWeight.SemiBold) }
-                Text("${DateUtil.formatParking(parking.startTime)} - ${DateUtil.formatParking(parking.endTime)}")
-                Text("€ ${"%.2f".format(parking.cost)}", color = AppTheme.colors.header)
-            }
+            Text(VisitorNameCache.map[parking.license] ?: "", style = AppType.name)
         }
     }
 }
