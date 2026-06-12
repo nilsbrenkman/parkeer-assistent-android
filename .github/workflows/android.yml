@@ -26,6 +26,13 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
 
+    - name: Print lint report
+      if: failure()
+      run: |
+        for f in app/build/intermediates/lint_intermediate_text_report/*/lintReportDebug/lint-results-debug.txt; do
+          [ -f "$f" ] && cat "$f"
+        done || true
+
     - name: Upload lint reports
       if: failure()
       uses: actions/upload-artifact@v4
