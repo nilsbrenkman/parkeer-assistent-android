@@ -1,6 +1,8 @@
 package nl.parkeerassistent.amsterdam.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -58,7 +60,8 @@ fun AppNavHost(onLogout: () -> Unit) {
         }
         composable<Screen.AddParking> { backStackEntry ->
             val visitorId = backStackEntry.toRoute<Screen.AddParking>().visitorId
-            val visitor = visitorVm.visitors.value?.firstOrNull { it.id == visitorId }
+            val visitors by visitorVm.visitors.collectAsStateWithLifecycle()
+            val visitor = visitors?.firstOrNull { it.id == visitorId }
             if (visitor == null) {
                 // Visitor list not available (e.g. process death) — system back returns home.
                 PlaceholderScreen("Parkeren")
