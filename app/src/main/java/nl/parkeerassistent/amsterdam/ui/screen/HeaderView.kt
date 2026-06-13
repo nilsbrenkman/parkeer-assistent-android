@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import nl.parkeerassistent.amsterdam.R
 import nl.parkeerassistent.amsterdam.ui.theme.AppTheme
+import nl.parkeerassistent.amsterdam.ui.theme.Dimens
 
 /**
  * Top brand header (iOS `HeaderView`). Shows the app name and, when logged in, a tappable
@@ -66,7 +67,7 @@ fun HeaderView(
                 contentDescription = stringResource(R.string.app_name),
                 modifier = Modifier
                     .align(Alignment.CenterStart)
-                    .height(48.dp)
+                    .height(Dimens.buttonHeight)
                     .clickable(onClick = onInfo),
             )
             if (loggedIn) {
@@ -75,7 +76,7 @@ fun HeaderView(
                     IconButton(
                         onClick = { expanded = true },
                         modifier = Modifier
-                            .size(48.dp)
+                            .size(Dimens.buttonHeight)
                             .border(1.2.dp, AppTheme.colors.onHeader, RoundedCornerShape(4.dp)),
                     ) {
                         Text(
@@ -124,7 +125,7 @@ fun HeaderView(
                     .fillMaxWidth()
                     .background(AppTheme.colors.light)
                     .clickable(onClick = onBalanceTap)
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                    .padding(horizontal = Dimens.paddingNormal, vertical = Dimens.paddingSmall),
                 horizontalArrangement = Arrangement.End,
             ) {
                 Text("${stringResource(R.string.user_balance)}:", color = AppTheme.colors.header)

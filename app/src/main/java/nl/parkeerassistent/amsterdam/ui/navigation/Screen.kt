@@ -15,6 +15,7 @@ sealed interface Screen {
     @Serializable data object Info : Screen
     @Serializable data object History : Screen
     @Serializable data class HistoryDetail(val parkingId: Long) : Screen
+    @Serializable data class ParkingDetail(val parkingId: Long) : Screen
     @Serializable data object Payment : Screen
     @Serializable data object Accounts : Screen
     @Serializable data class AccountDetail(val username: String) : Screen

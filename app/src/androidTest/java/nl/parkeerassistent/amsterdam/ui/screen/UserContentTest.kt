@@ -26,7 +26,7 @@ class UserContentTest {
     private fun actions(onAddVisitor: () -> Unit = {}) = UserActions(
         onLogout = {}, onInfo = {}, onHistory = {}, onPayment = {}, onAccounts = {}, onSettings = {},
         onAddVisitor = onAddVisitor, onAddParking = {}, onDeleteVisitor = {}, onTooManyVisitors = {},
-        onBalanceTap = {}, onStop = {},
+        onBalanceTap = {}, onStop = {}, onOpenParking = {},
     )
 
     @Test fun rendersVisitorAndEmptyParking() {

@@ -1,7 +1,10 @@
 package nl.parkeerassistent.amsterdam.ui.navigation
 
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -16,11 +19,12 @@ import nl.parkeerassistent.amsterdam.ui.screen.AddVisitorScreen
 import nl.parkeerassistent.amsterdam.ui.screen.HistoryDetailScreen
 import nl.parkeerassistent.amsterdam.ui.screen.HistoryListScreen
 import nl.parkeerassistent.amsterdam.ui.screen.InfoScreen
+import nl.parkeerassistent.amsterdam.ui.screen.ParkingDetailScreen
 import nl.parkeerassistent.amsterdam.ui.screen.ParkingMeterScreen
 import nl.parkeerassistent.amsterdam.ui.screen.PaymentScreen
-import nl.parkeerassistent.amsterdam.ui.screen.PlaceholderScreen
 import nl.parkeerassistent.amsterdam.ui.screen.SettingsScreen
 import nl.parkeerassistent.amsterdam.ui.screen.UserScreen
+import nl.parkeerassistent.amsterdam.ui.theme.Dimens
 import nl.parkeerassistent.amsterdam.ui.user.UserViewModel
 import nl.parkeerassistent.amsterdam.ui.visitor.VisitorViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -50,6 +54,7 @@ fun AppNavHost(onLogout: () -> Unit) {
                 onSettings = { nav.navigate(Screen.Settings) },
                 onAddVisitor = { nav.navigate(Screen.AddVisitor) },
                 onAddParking = { visitorId -> nav.navigate(Screen.AddParking(visitorId)) },
+                onOpenParking = { id -> nav.navigate(Screen.ParkingDetail(id)) },
                 userVm = userVm,
                 visitorVm = visitorVm,
                 parkingVm = parkingVm,
@@ -63,8 +68,7 @@ fun AppNavHost(onLogout: () -> Unit) {
             val visitors by visitorVm.visitors.collectAsStateWithLifecycle()
             val visitor = visitors?.firstOrNull { it.id == visitorId }
             if (visitor == null) {
-                // Visitor list not available (e.g. process death) — system back returns home.
-                PlaceholderScreen("Parkeren")
+                Spacer(Modifier.height(Dimens.spacingLarge))
             } else {
                 AddParkingScreen(
                     visitor = visitor,
@@ -90,6 +94,14 @@ fun AppNavHost(onLogout: () -> Unit) {
                 parkingId = backStackEntry.toRoute<Screen.HistoryDetail>().parkingId,
                 parkingVm = parkingVm,
                 visitorVm = visitorVm,
+            )
+        }
+        composable<Screen.ParkingDetail> { backStackEntry ->
+            ParkingDetailScreen(
+                parkingId = backStackEntry.toRoute<Screen.ParkingDetail>().parkingId,
+                parkingVm = parkingVm,
+                visitorVm = visitorVm,
+                onBack = nav::popBackStack,
             )
         }
         composable<Screen.Payment> { PaymentScreen() }

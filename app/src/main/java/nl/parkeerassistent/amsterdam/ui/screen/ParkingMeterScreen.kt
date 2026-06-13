@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,6 +32,7 @@ import nl.parkeerassistent.amsterdam.data.model.ParkingMeterType
 import nl.parkeerassistent.amsterdam.location.LocationProvider
 import nl.parkeerassistent.amsterdam.ui.components.TitleBar
 import nl.parkeerassistent.amsterdam.ui.parkingmeter.ParkingMeterViewModel
+import nl.parkeerassistent.amsterdam.ui.theme.AppShape
 import nl.parkeerassistent.amsterdam.ui.theme.AppTheme
 import nl.parkeerassistent.amsterdam.ui.theme.Dimens
 import nl.parkeerassistent.amsterdam.ui.theme.ParkeerAssistentTheme
@@ -106,7 +106,7 @@ private fun ParkingMeterContent(meters: List<ParkingMeter>, onSelect: (ParkingMe
                         color = AppTheme.colors.onHeader,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
-                            .background(AppTheme.colors.header, RoundedCornerShape(Dimens.radiusSmall))
+                            .background(AppTheme.colors.header, AppShape.roundedSmall)
                             .padding(horizontal = Dimens.paddingSmall, vertical = Dimens.paddingNano),
                     )
                     Text(meter.name, Modifier.weight(1f))

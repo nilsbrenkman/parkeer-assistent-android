@@ -11,7 +11,7 @@ import nl.parkeerassistent.amsterdam.data.model.Parking
 import nl.parkeerassistent.amsterdam.data.model.ParkingResponse
 import nl.parkeerassistent.amsterdam.data.model.Visitor
 import nl.parkeerassistent.amsterdam.util.DateUtil
-import nl.parkeerassistent.amsterdam.util.License
+import nl.parkeerassistent.amsterdam.util.LicenseUtil
 
 /**
  * Schedules local parking notifications (port of iOS `Notifications`): start/end/reminder
@@ -91,7 +91,7 @@ class AlarmParkingNotifications(
 
     private fun subtitle(parking: Parking): String? {
         val visitor = visitors.firstOrNull { it.license.equals(parking.license, ignoreCase = true) } ?: return null
-        val license = License.format(visitor.license)
+        val license = LicenseUtil.format(visitor.license)
         return visitor.name?.let { "$it | [ $license ]" } ?: "[ $license ]"
     }
 

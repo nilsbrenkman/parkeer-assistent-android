@@ -5,7 +5,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import nl.parkeerassistent.amsterdam.ui.screen.HeaderView
 import nl.parkeerassistent.amsterdam.ui.screen.InfoScreen
 import nl.parkeerassistent.amsterdam.ui.screen.LoadingScreen
-import nl.parkeerassistent.amsterdam.ui.screen.PlaceholderScreen
 import nl.parkeerassistent.amsterdam.ui.theme.ParkeerAssistentTheme
 
 @Preview(showBackground = true)
@@ -19,10 +18,6 @@ private fun HeaderLoggedInPreview() = ParkeerAssistentTheme { HeaderView(loggedI
 @Preview(showBackground = true, heightDp = 300)
 @Composable
 private fun LoadingScreenPreview() = ParkeerAssistentTheme { LoadingScreen() }
-
-@Preview(showBackground = true, heightDp = 300)
-@Composable
-private fun PlaceholderScreenPreview() = ParkeerAssistentTheme { PlaceholderScreen("Accounts") }
 
 @Preview(showBackground = true, heightDp = 600)
 @Composable

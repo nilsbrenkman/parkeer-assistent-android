@@ -63,6 +63,7 @@ class UserActions(
     val onTooManyVisitors: () -> Unit,
     val onBalanceTap: () -> Unit,
     val onStop: (Parking) -> Unit,
+    val onOpenParking: (parkingId: Long) -> Unit,
 )
 
 /**
@@ -79,6 +80,7 @@ fun UserScreen(
     onSettings: () -> Unit,
     onAddVisitor: () -> Unit,
     onAddParking: (visitorId: Long) -> Unit,
+    onOpenParking: (parkingId: Long) -> Unit,
     userVm: UserViewModel = koinViewModel(),
     visitorVm: VisitorViewModel = koinViewModel(),
     parkingVm: ParkingViewModel = koinViewModel(),
@@ -126,6 +128,7 @@ fun UserScreen(
             onTooManyVisitors = { messageBus.show(tooManyMsg, MessageType.WARN) },
             onBalanceTap = { userVm.getBalance() },
             onStop = { p -> parkingVm.stopParking(p) { userVm.getBalance() } },
+            onOpenParking = onOpenParking,
         ),
     )
 }
@@ -178,14 +181,14 @@ internal fun UserContent(
                     item { HorizontalDivider(Modifier.padding(vertical = Dimens.paddingNano)) }
                     item { SubSectionHeader(stringResource(R.string.parking_active)) }
                     items(active, key = { it.id }) { p ->
-                        ParkingRow(p, onStop = { actions.onStop(p) })
+                        ParkingRow(p, onStop = { actions.onStop(p) }, onClick = { actions.onOpenParking(p.id) })
                     }
                 }
                 if (scheduled.isNotEmpty()) {
                     item { HorizontalDivider(Modifier.padding(vertical = Dimens.paddingNano)) }
                     item { SubSectionHeader(stringResource(R.string.parking_scheduled)) }
                     items(scheduled, key = { it.id }) { p ->
-                        ParkingRow(p, onStop = { actions.onStop(p) })
+                        ParkingRow(p, onStop = { actions.onStop(p) }, onClick = { actions.onOpenParking(p.id) })
                     }
                 }
             }
@@ -232,11 +235,12 @@ private fun VisitorRow(visitor: Visitor, onClick: () -> Unit, onDelete: () -> Un
 }
 
 @Composable
-private fun ParkingRow(parking: Parking, onStop: () -> Unit) {
+private fun ParkingRow(parking: Parking, onStop: () -> Unit, onClick: () -> Unit) {
     SwipeToActionRow(actionLabel = stringResource(R.string.common_stop), onAction = onStop) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .clickable(onClick = onClick)
                 .padding(vertical = Dimens.paddingMini),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(Dimens.spacingNormal),
@@ -262,6 +266,6 @@ private fun UserContentPreview() = ParkeerAssistentTheme {
         balance = "20.27",
         parking = parking,
         visitors = visitors,
-        actions = UserActions({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}),
+        actions = UserActions({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}),
     )
 }

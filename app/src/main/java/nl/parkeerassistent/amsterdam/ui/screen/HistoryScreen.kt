@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -29,16 +28,15 @@ import nl.parkeerassistent.amsterdam.R
 import nl.parkeerassistent.amsterdam.data.model.Parking
 import nl.parkeerassistent.amsterdam.ui.components.CalendarDate
 import nl.parkeerassistent.amsterdam.ui.components.LicensePlate
-import nl.parkeerassistent.amsterdam.ui.components.Property
 import nl.parkeerassistent.amsterdam.ui.components.SectionHeader
 import nl.parkeerassistent.amsterdam.ui.components.TitleBar
 import nl.parkeerassistent.amsterdam.ui.parking.ParkingViewModel
+import nl.parkeerassistent.amsterdam.ui.theme.AppShape
 import nl.parkeerassistent.amsterdam.ui.theme.AppType
 import nl.parkeerassistent.amsterdam.ui.theme.Dimens
 import nl.parkeerassistent.amsterdam.ui.theme.ParkeerAssistentTheme
-import nl.parkeerassistent.amsterdam.ui.visitor.VisitorViewModel
 import nl.parkeerassistent.amsterdam.util.DateUtil
-import nl.parkeerassistent.amsterdam.util.License
+import nl.parkeerassistent.amsterdam.util.LicenseUtil
 import nl.parkeerassistent.amsterdam.util.VisitorNameCache
 import java.time.LocalDate
 import java.time.YearMonth
@@ -96,44 +94,12 @@ private fun HistoryRow(parking: Parking, onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
-            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(Dimens.radiusSmall))
+            .background(MaterialTheme.colorScheme.surface, AppShape.roundedSmall)
             .padding(all = Dimens.paddingMini),
     ) {
         DateUtil.toLocalDate(parking.startTime)?.let { CalendarDate(it) }
-        LicensePlate(License.format(parking.license))
+        LicensePlate(LicenseUtil.format(parking.license))
         Text(VisitorNameCache.map[parking.license] ?: "", style = AppType.name)
-    }
-}
-
-/** History detail (iOS `HistoryView`). */
-@Composable
-fun HistoryDetailScreen(
-    parkingId: Long,
-    parkingVm: ParkingViewModel,
-    visitorVm: VisitorViewModel,
-) {
-    val history by parkingVm.history.collectAsStateWithLifecycle()
-    val parking = history?.firstOrNull { it.id == parkingId }
-    HistoryDetailContent(parking = parking, name = parking?.let { visitorVm.getName(it.license) } ?: "")
-}
-
-@Composable
-private fun HistoryDetailContent(parking: Parking?, name: String) {
-    Column(Modifier.fillMaxSize()) {
-        TitleBar(title = stringResource(R.string.parking_details))
-        if (parking == null) {
-            Box(Modifier.fillMaxSize(), Alignment.Center) { Text(stringResource(R.string.parking_no_history)) }
-            return@Column
-        }
-        Column(Modifier.padding(Dimens.paddingNormal)) {
-            Box(Modifier.fillMaxWidth().padding(vertical = Dimens.paddingSmall), Alignment.Center) {
-                LicensePlate(License.format(parking.license))
-            }
-            Property(stringResource(R.string.visitor_name), name)
-            Property(stringResource(R.string.parking_cost), "€ ${"%.2f".format(parking.cost)}")
-            Property(stringResource(R.string.parking_start_time), DateUtil.formatParking(parking.startTime))
-            Property(stringResource(R.string.parking_end_time), DateUtil.formatParking(parking.endTime))
-        }
     }
 }
 
@@ -145,7 +111,3 @@ private val sampleHistory = listOf(
 @Preview(showBackground = true, heightDp = 400)
 @Composable
 private fun HistoryListPreview() = ParkeerAssistentTheme { HistoryListContent(sampleHistory) {} }
-
-@Preview(showBackground = true, heightDp = 400)
-@Composable
-private fun HistoryDetailPreview() = ParkeerAssistentTheme { HistoryDetailContent(sampleHistory.first(), "Jan Jansen") }

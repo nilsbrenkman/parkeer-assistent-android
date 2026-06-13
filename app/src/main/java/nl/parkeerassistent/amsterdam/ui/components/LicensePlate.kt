@@ -5,7 +5,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
@@ -19,11 +18,12 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import nl.parkeerassistent.amsterdam.ui.theme.AppShape
 import nl.parkeerassistent.amsterdam.ui.theme.AppTheme
 import nl.parkeerassistent.amsterdam.ui.theme.AppType
 import nl.parkeerassistent.amsterdam.ui.theme.Dimens
 import nl.parkeerassistent.amsterdam.ui.theme.ParkeerAssistentTheme
-import nl.parkeerassistent.amsterdam.util.License
+import nl.parkeerassistent.amsterdam.util.LicenseUtil
 
 /**
  * Yellow Dutch-style license plate (iOS `LicenseView`).
@@ -34,9 +34,9 @@ import nl.parkeerassistent.amsterdam.util.License
 @Composable
 fun LicensePlate(license: String, modifier: Modifier = Modifier) {
     Text(
-        text = License.format(license),
+        text = LicenseUtil.format(license),
         style = AppType.license,
-        color = AppTheme.colors.license,
+        color = AppTheme.colors.onLicense,
         textAlign = TextAlign.Center,
         modifier = modifier
             .plateBackground()
@@ -47,7 +47,7 @@ fun LicensePlate(license: String, modifier: Modifier = Modifier) {
 /**
  * Editable counterpart of [LicensePlate] — an in-place text field styled exactly like the yellow
  * plate (same width, background, border and centred [AppType.license] text). `value` is shown via
- * [License.format] grouping, so callers should pass the already-formatted license back in.
+ * [LicenseUtil.format] grouping, so callers should pass the already-formatted license back in.
  */
 @Composable
 fun LicensePlateField(
@@ -61,10 +61,10 @@ fun LicensePlateField(
         onValueChange = onValueChange,
         singleLine = true,
         textStyle = AppType.license.copy(
-            color = AppTheme.colors.license,
+            color = AppTheme.colors.onLicense,
             textAlign = TextAlign.Center,
         ),
-        cursorBrush = SolidColor(AppTheme.colors.license),
+        cursorBrush = SolidColor(AppTheme.colors.onLicense),
         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Characters),
         modifier = modifier
             .plateBackground()
@@ -75,7 +75,7 @@ fun LicensePlateField(
                     Text(
                         text = placeholder,
                         style = AppType.license,
-                        color = AppTheme.colors.license.copy(alpha = 0.4f),
+                        color = AppTheme.colors.onLicense.copy(alpha = 0.4f),
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -87,10 +87,9 @@ fun LicensePlateField(
 
 /** Yellow plate background (clip + fill + border + fixed width) shared by plate composables. */
 private fun Modifier.plateBackground(): Modifier = composed {
-    val shape = RoundedCornerShape(Dimens.radiusSmall)
-    clip(shape)
-        .background(AppTheme.colors.licenseBg)
-        .border(2.dp, AppTheme.colors.licenseBorder, shape)
+    clip(AppShape.roundedSmall)
+        .background(AppTheme.colors.license)
+        .border(2.dp, AppTheme.colors.licenseBorder, AppShape.roundedSmall)
         .width(Dimens.licenseWidth)
 }
 

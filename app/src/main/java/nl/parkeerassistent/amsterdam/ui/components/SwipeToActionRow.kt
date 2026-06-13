@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
@@ -16,6 +15,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import nl.parkeerassistent.amsterdam.ui.theme.AppShape
 import nl.parkeerassistent.amsterdam.ui.theme.AppTheme
 import nl.parkeerassistent.amsterdam.ui.theme.Dimens
 
@@ -40,7 +40,7 @@ fun SwipeToActionRow(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(AppTheme.colors.danger, shape = RoundedCornerShape(Dimens.radiusSmall),)
+                    .background(AppTheme.colors.danger, AppShape.roundedSmall)
                     .padding(horizontal = Dimens.paddingNormal),
                 contentAlignment = Alignment.CenterEnd,
             ) {
@@ -51,10 +51,7 @@ fun SwipeToActionRow(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(
-                    color = MaterialTheme.colorScheme.surface,
-                    shape = RoundedCornerShape(Dimens.radiusSmall),
-                )
+                .background(MaterialTheme.colorScheme.surface, AppShape.roundedSmall)
                 .padding(horizontal = Dimens.paddingSmall),
         ) { content() }
     }

@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -41,6 +40,7 @@ import nl.parkeerassistent.amsterdam.ui.components.TitleBar
 import nl.parkeerassistent.amsterdam.ui.components.VisitorView
 import nl.parkeerassistent.amsterdam.ui.components.WheelSelector
 import nl.parkeerassistent.amsterdam.ui.parking.ParkingViewModel
+import nl.parkeerassistent.amsterdam.ui.theme.AppShape
 import nl.parkeerassistent.amsterdam.ui.theme.AppTheme
 import nl.parkeerassistent.amsterdam.ui.theme.AppType
 import nl.parkeerassistent.amsterdam.ui.theme.Dimens
@@ -292,8 +292,8 @@ private fun SignBox(meterId: Long?, modifier: Modifier = Modifier) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(48.dp)
-                .clip(RoundedCornerShape(Dimens.radiusSmall))
+                .height(Dimens.buttonHeight)
+                .clip(AppShape.roundedSmall)
                 .background(AppTheme.colors.header),
             contentAlignment = Alignment.Center,
         ) {

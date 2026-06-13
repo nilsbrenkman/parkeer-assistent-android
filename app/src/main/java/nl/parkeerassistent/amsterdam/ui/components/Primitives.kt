@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -22,7 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
+import nl.parkeerassistent.amsterdam.ui.theme.AppShape
 import nl.parkeerassistent.amsterdam.ui.theme.AppTheme
 import nl.parkeerassistent.amsterdam.ui.theme.AppType
 import nl.parkeerassistent.amsterdam.ui.theme.Dimens
@@ -67,7 +66,39 @@ fun SuccessButton(
             contentColor = AppTheme.colors.enabled,
         ),
         contentPadding = PaddingValues(vertical = Dimens.paddingSmall),
-        shape = RoundedCornerShape(Dimens.radiusNormal),
+        shape = AppShape.roundedNormal,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = Dimens.spacingLarge),
+    ) {
+        ProvideTextStyle(AppType.button) {
+            if (wait) ButtonWait(wait = true) { content() } else content()
+        }
+    }
+}
+
+/**
+ * Full-width filled call-to-action button in the app's danger red ([AppTheme.colors.danger]) —
+ * the destructive counterpart to [SuccessButton] (iOS `.style(.danger)`). When [wait] is true it
+ * shows a spinner in place of [content].
+ */
+@Composable
+fun DangerButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    wait: Boolean = false,
+    content: @Composable () -> Unit,
+) {
+    Button(
+        onClick = onClick,
+        enabled = enabled,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = AppTheme.colors.danger,
+            contentColor = AppTheme.colors.enabled,
+        ),
+        contentPadding = PaddingValues(vertical = Dimens.paddingSmall),
+        shape = AppShape.roundedNormal,
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = Dimens.spacingLarge),
@@ -107,8 +138,8 @@ fun DataBox(title: String, content: String, modifier: Modifier = Modifier) {
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(48.dp)
-                .clip(RoundedCornerShape(Dimens.radiusSmall))
+                .height(Dimens.buttonHeight)
+                .clip(AppShape.roundedSmall)
                 .background(MaterialTheme.colorScheme.surface),
         ) {
             Text(content, style = AppType.dataBoxContent)
@@ -120,15 +151,14 @@ fun DataBox(title: String, content: String, modifier: Modifier = Modifier) {
 @Composable
 fun Property(label: String, text: String, modifier: Modifier = Modifier) {
     Row(
+        verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = Dimens.paddingMini),
-        verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(label)
+        Text("$label:")
         Text(
             text = text,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.End,
             modifier = Modifier.weight(1f),
         )

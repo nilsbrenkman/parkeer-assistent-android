@@ -4,7 +4,7 @@ package nl.parkeerassistent.amsterdam.util
  * Dutch license-plate grouping (port of iOS `util/License`). Normalises to A–Z/0–9 and inserts
  * dashes for the recognised 6-character sidecode patterns; otherwise returns the bare characters.
  */
-object License {
+object LicenseUtil {
 
     fun format(license: String): String {
         val chars = normalise(license)

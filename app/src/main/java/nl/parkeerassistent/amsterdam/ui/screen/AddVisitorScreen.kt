@@ -3,8 +3,10 @@ package nl.parkeerassistent.amsterdam.ui.screen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -28,7 +30,7 @@ import nl.parkeerassistent.amsterdam.ui.components.TitleBar
 import nl.parkeerassistent.amsterdam.ui.theme.Dimens
 import nl.parkeerassistent.amsterdam.ui.theme.ParkeerAssistentTheme
 import nl.parkeerassistent.amsterdam.ui.visitor.VisitorViewModel
-import nl.parkeerassistent.amsterdam.util.License
+import nl.parkeerassistent.amsterdam.util.LicenseUtil
 
 /** Add a visitor (iOS `AddVisitorView`): license (auto-formatted) + name. */
 @Composable
@@ -43,7 +45,7 @@ fun AddVisitorScreen(
     AddVisitorContent(
         license = license,
         name = name,
-        onLicenseChange = { license = License.format(it) },
+        onLicenseChange = { license = LicenseUtil.format(it) },
         onNameChange = { name = it },
         onAdd = {
             if (!wait) {
@@ -73,11 +75,14 @@ internal fun AddVisitorContent(
                 .padding(Dimens.contentPadding)
                 .background(MaterialTheme.colorScheme.background),
         ) {
+            Spacer(Modifier.height(Dimens.spacingSmall))
+
             LicensePlateField(
                 value = license,
                 onValueChange = onLicenseChange,
                 placeholder = stringResource(R.string.visitor_license),
             )
+
             OutlinedTextField(
                 value = name,
                 onValueChange = onNameChange,
@@ -86,6 +91,7 @@ internal fun AddVisitorContent(
                 keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words),
                 modifier = Modifier.fillMaxWidth(),
             )
+
             SuccessButton(
                 onClick = onAdd,
                 enabled = license.isNotEmpty() && name.isNotEmpty(),

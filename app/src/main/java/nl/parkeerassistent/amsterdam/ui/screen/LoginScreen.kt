@@ -1,5 +1,7 @@
 package nl.parkeerassistent.amsterdam.ui.screen
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +15,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -148,10 +151,12 @@ internal fun LoginContent(
     Column(Modifier.fillMaxSize()) {
         HeaderView(loggedIn = false)
         Column(
+            verticalArrangement = Arrangement.spacedBy(Dimens.spacingSmall),
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(Dimens.paddingNormal),
+                .padding(Dimens.contentPadding)
+                .background(MaterialTheme.colorScheme.background),
         ) {
             SectionHeader(stringResource(R.string.login_login), Modifier.padding(vertical = Dimens.paddingNormal))
             OutlinedTextField(
@@ -172,6 +177,12 @@ internal fun LoginContent(
                 modifier = Modifier.fillMaxWidth().padding(top = Dimens.paddingSmall),
             )
 
+            SuccessButton(
+                onClick = onLogin,
+                enabled = username.isNotEmpty() && password.isNotEmpty(),
+                wait = wait,
+            ) { Text(stringResource(R.string.login_login)) }
+
             when {
                 accounts.isNotEmpty() -> AccountPicker(accounts, username, onSelectAccount)
                 authenticationFailed -> OutlinedButton(
@@ -186,12 +197,6 @@ internal fun LoginContent(
                     Text(stringResource(R.string.login_remember_short))
                 }
             }
-
-            SuccessButton(
-                onClick = onLogin,
-                enabled = username.isNotEmpty() && password.isNotEmpty(),
-                wait = wait,
-            ) { Text(stringResource(R.string.login_login)) }
         }
     }
 }
