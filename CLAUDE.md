@@ -90,8 +90,10 @@ Retrofit/OkHttp → server**. DI is **Koin**; navigation is **Navigation-Compose
   `gradle.properties` and expect friction. (See the `agp9-toolchain-constraints` memory.)
 - **Kotlin nests block comments:** a `/*` or `*/` substring inside a KDoc (e.g. a path like
   `client/*Client.swift` or `res/values*/…`) breaks compilation. Avoid those substrings in comments.
-- **material-icons isn't bundled** with material3 here — use text glyphs (`←`, `✓`, `≡`) not
-  `Icons.*`.
+- **material-icons:** `material-icons-extended` is now a dependency (`libs.androidx.compose.material.icons.extended`),
+  so `Icons.*` are available (e.g. `HeaderView` menu items). It's a large artifact — R8 strips unused
+  icons in release, but debug builds carry the full set. Existing text glyphs (`←`, `✓`, `≡`) are fine
+  to keep where they already work.
 - **No Google Maps API key** — the parking-meter picker is a distance-sorted *list*, not a map.
 - **`BuildConfig.VERSION_NAME/CODE` aren't generated** — read version from `PackageManager`.
 - **Not testable on the bare emulator:** biometric login (no enrolled fingerprint → degrades to

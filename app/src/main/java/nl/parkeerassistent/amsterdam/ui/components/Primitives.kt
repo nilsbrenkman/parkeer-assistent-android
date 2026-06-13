@@ -49,7 +49,16 @@ fun SectionHeader(header: String, modifier: Modifier = Modifier) {
     Text(
         text = "$header:",
         style = AppType.sectionHeader,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = modifier,
+    )
+}
+
+@Composable
+fun SubSectionHeader(header: String, modifier: Modifier = Modifier) {
+    Text(
+        text = header,
+        style = AppType.subSectionHeader,
+        color = AppTheme.colors.subSectionHeader,
         modifier = modifier,
     )
 }

@@ -1,9 +1,7 @@
 package nl.parkeerassistent.amsterdam.ui.screen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,11 +12,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -26,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.delay
@@ -40,6 +33,8 @@ import nl.parkeerassistent.amsterdam.ui.common.MessageBus
 import nl.parkeerassistent.amsterdam.ui.common.MessageType
 import nl.parkeerassistent.amsterdam.ui.components.LicensePlate
 import nl.parkeerassistent.amsterdam.ui.components.SectionHeader
+import nl.parkeerassistent.amsterdam.ui.components.SubSectionHeader
+import nl.parkeerassistent.amsterdam.ui.components.SwipeToActionRow
 import nl.parkeerassistent.amsterdam.ui.parking.ParkingViewModel
 import nl.parkeerassistent.amsterdam.ui.theme.AppTheme
 import nl.parkeerassistent.amsterdam.ui.theme.AppType
@@ -51,6 +46,7 @@ import nl.parkeerassistent.amsterdam.util.VisitorNameCache
 import nl.parkeerassistent.amsterdam.util.findActivity
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
+import kotlin.time.Duration.Companion.milliseconds
 
 /** iOS caps saved visitors at 9. */
 private const val MAX_VISITORS = 9
@@ -109,7 +105,7 @@ fun UserScreen(
     }
     LaunchedEffect(Unit) {
         while (true) {
-            delay(60_000)
+            delay(60_000.milliseconds)
             parkingVm.getParking()
             userVm.getBalance()
         }
@@ -157,23 +153,36 @@ internal fun UserContent(
         )
 
         LazyColumn(
-            modifier = Modifier.fillMaxSize().padding(Dimens.paddingNormal),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(Dimens.paddingNormal),
             verticalArrangement = Arrangement.spacedBy(Dimens.spacingSmall),
         ) {
             item { SectionHeader(stringResource(R.string.parking_header)) }
             val active = parking?.active.orEmpty()
             val scheduled = parking?.scheduled.orEmpty()
             if (active.isEmpty() && scheduled.isEmpty()) {
-                item { Text(stringResource(R.string.parking_no_sessions)) }
+                item {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier
+                            .padding(vertical = Dimens.paddingNormal)
+                            .fillMaxWidth(),
+                    ) {
+                        SubSectionHeader(stringResource(R.string.parking_no_sessions))
+                    }
+                }
             } else {
                 if (active.isNotEmpty()) {
-                    item { Text(stringResource(R.string.parking_active)) }
+                    item { HorizontalDivider(Modifier.padding(vertical = Dimens.paddingNano)) }
+                    item { SubSectionHeader(stringResource(R.string.parking_active)) }
                     items(active, key = { it.id }) { p ->
                         ParkingRow(p, onStop = { actions.onStop(p) })
                     }
                 }
                 if (scheduled.isNotEmpty()) {
-                    item { Text(stringResource(R.string.parking_scheduled)) }
+                    item { HorizontalDivider(Modifier.padding(vertical = Dimens.paddingNano)) }
+                    item { SubSectionHeader(stringResource(R.string.parking_scheduled)) }
                     items(scheduled, key = { it.id }) { p ->
                         ParkingRow(p, onStop = { actions.onStop(p) })
                     }
@@ -202,43 +211,12 @@ internal fun UserContent(
                         containerColor = AppTheme.colors.success,
                         contentColor = AppTheme.colors.enabled,
                     ),
-                    modifier = Modifier.fillMaxWidth().padding(top = Dimens.paddingSmall),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = Dimens.paddingSmall),
                 ) { Text(stringResource(R.string.visitor_add)) }
             }
         }
-    }
-}
-
-/**
- * Full-swipe (end-to-start) row that triggers [onAction] with a red [actionLabel] background.
- * Used for visitor delete and parking stop (iOS `swipeActions`).
- */
-@Composable
-private fun SwipeToActionRow(
-    actionLabel: String,
-    onAction: () -> Unit,
-    content: @Composable () -> Unit,
-) {
-    val dismissState = rememberSwipeToDismissBoxState()
-    LaunchedEffect(dismissState.currentValue) {
-        if (dismissState.currentValue == SwipeToDismissBoxValue.EndToStart) onAction()
-    }
-    SwipeToDismissBox(
-        state = dismissState,
-        enableDismissFromStartToEnd = false,
-        backgroundContent = {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(AppTheme.colors.danger)
-                    .padding(horizontal = Dimens.paddingNormal),
-                contentAlignment = Alignment.CenterEnd,
-            ) {
-                Text(actionLabel, color = AppTheme.colors.enabled, fontWeight = FontWeight.SemiBold)
-            }
-        },
-    ) {
-        Box(Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface)) { content() }
     }
 }
 
@@ -251,7 +229,7 @@ private fun VisitorRow(visitor: Visitor, onClick: () -> Unit, onDelete: () -> Un
                 .clickable(onClick = onClick)
                 .padding(vertical = Dimens.paddingMini),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(Dimens.spacingSmall),
+            horizontalArrangement = Arrangement.spacedBy(Dimens.spacingNormal),
         ) {
             LicensePlate(visitor.license)
             Text(visitor.name ?: "", style = AppType.name)
@@ -263,9 +241,11 @@ private fun VisitorRow(visitor: Visitor, onClick: () -> Unit, onDelete: () -> Un
 private fun ParkingRow(parking: Parking, onStop: () -> Unit) {
     SwipeToActionRow(actionLabel = stringResource(R.string.common_stop), onAction = onStop) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(vertical = Dimens.paddingMini),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = Dimens.paddingMini),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(Dimens.spacingSmall),
+            horizontalArrangement = Arrangement.spacedBy(Dimens.spacingNormal),
         ) {
             LicensePlate(parking.license)
             Text(VisitorNameCache.map[parking.license] ?: "", style = AppType.name)

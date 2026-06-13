@@ -15,6 +15,8 @@ data class AppColors(
     val license: Color,
     val licenseBg: Color,
     val licenseBorder: Color,
+    val subSectionHeader: Color,
+
     val light: Color,
     val bw70: Color,
     val enabled: Color,
@@ -42,6 +44,7 @@ private val SharedColors = AppColors(
     license = Color(0xFF000000),
     licenseBg = Color(0xFFF2BA00),
     licenseBorder = Color(0xFF000000),
+    subSectionHeader = Color(0xFF808080),
     light = Color(0xFFFFFFFF),
     bw70 = Color(0xFFEEEEEE),
     enabled = Color(0xFFFFFFFF),

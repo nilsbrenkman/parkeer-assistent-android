@@ -23,6 +23,7 @@
     <!-- Account -->
     <string name="account_header">Accounts</string>
     <string name="account_new_account">Nieuwe account</string>
+    <string name="account_empty">Geen opgeslagen accounts</string>
     <string name="account_details">Account details</string>
     <string name="account_label">Account</string>
     <string name="account_alias">Omschrijving</string>

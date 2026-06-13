@@ -9,21 +9,15 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
-private val BrandHeader = Color(0xFF007CBC)
 
 private val DarkColorScheme = darkColorScheme(
     primary = BrandHeader,
-    secondary = PurpleGrey80,
-    tertiary = Pink80,
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = BrandHeader,
-    secondary = PurpleGrey40,
-    tertiary = Pink40,
 )
 
 @Composable

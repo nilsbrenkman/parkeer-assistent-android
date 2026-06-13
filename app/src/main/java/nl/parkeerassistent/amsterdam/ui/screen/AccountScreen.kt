@@ -14,7 +14,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -35,8 +34,11 @@ import nl.parkeerassistent.amsterdam.data.model.Credentials
 import nl.parkeerassistent.amsterdam.ui.account.AccountViewModel
 import nl.parkeerassistent.amsterdam.ui.common.MessageBus
 import nl.parkeerassistent.amsterdam.ui.common.MessageType
+import nl.parkeerassistent.amsterdam.ui.components.SubSectionHeader
+import nl.parkeerassistent.amsterdam.ui.components.SwipeToActionRow
 import nl.parkeerassistent.amsterdam.ui.components.TitleBar
 import nl.parkeerassistent.amsterdam.ui.theme.AppTheme
+import nl.parkeerassistent.amsterdam.ui.theme.AppType
 import nl.parkeerassistent.amsterdam.ui.theme.Dimens
 import nl.parkeerassistent.amsterdam.ui.theme.ParkeerAssistentTheme
 import nl.parkeerassistent.amsterdam.util.findActivity
@@ -91,17 +93,40 @@ private fun AccountsContent(
     Column(Modifier.fillMaxSize()) {
         TitleBar(title = stringResource(R.string.account_header))
         LazyColumn(Modifier.weight(1f).padding(horizontal = Dimens.paddingNormal)) {
+            if (accounts.isEmpty()) {
+                item {
+                    HorizontalDivider()
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier
+                            .padding(vertical = Dimens.paddingNormal)
+                            .fillMaxWidth(),
+                    ) {
+                        SubSectionHeader(stringResource(R.string.account_empty))
+                    }
+                    HorizontalDivider()
+                }
+            }
+            item { HorizontalDivider() }
             items(accounts, key = { it.username }) { account ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onOpen(account.username) }
-                        .padding(vertical = Dimens.paddingSmall),
-                    verticalAlignment = Alignment.CenterVertically,
+                SwipeToActionRow(
+                    actionLabel = stringResource(R.string.common_delete),
+                    onAction = { onDelete(account) },
                 ) {
-                    Text(account.alias ?: account.username, Modifier.weight(1f))
-                    TextButton(onClick = { onDelete(account) }) {
-                        Text(stringResource(R.string.common_delete), color = AppTheme.colors.danger)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onOpen(account.username) }
+                            .padding(vertical = Dimens.paddingSmall),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            text = account.alias ?: account.username,
+                            style = AppType.name,
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(vertical = Dimens.paddingSmall),
+                        )
                     }
                 }
                 HorizontalDivider()

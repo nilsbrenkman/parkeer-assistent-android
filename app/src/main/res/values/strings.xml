@@ -25,6 +25,7 @@
     <!-- Account -->
     <string name="account_header">Accounts</string>
     <string name="account_new_account">New account</string>
+    <string name="account_empty">No accounts stored</string>
     <string name="account_details">Account details</string>
     <string name="account_label">Account</string>
     <string name="account_alias">Description</string>

@@ -23,7 +23,7 @@ object Dimens {
     val radiusSmall = 6.dp
 
     // License plate
-    val licenseWidth = 140.dp
+    val licenseWidth = 150.dp
     val licenseHeight = 36.dp
     val licensePadding = 5.dp
 }
