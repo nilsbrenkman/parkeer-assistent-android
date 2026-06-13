@@ -1,17 +1,19 @@
 package nl.parkeerassistent.amsterdam.ui.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,9 +37,9 @@ import nl.parkeerassistent.amsterdam.ui.account.AccountViewModel
 import nl.parkeerassistent.amsterdam.ui.common.MessageBus
 import nl.parkeerassistent.amsterdam.ui.common.MessageType
 import nl.parkeerassistent.amsterdam.ui.components.SubSectionHeader
+import nl.parkeerassistent.amsterdam.ui.components.SuccessButton
 import nl.parkeerassistent.amsterdam.ui.components.SwipeToActionRow
 import nl.parkeerassistent.amsterdam.ui.components.TitleBar
-import nl.parkeerassistent.amsterdam.ui.theme.AppTheme
 import nl.parkeerassistent.amsterdam.ui.theme.AppType
 import nl.parkeerassistent.amsterdam.ui.theme.Dimens
 import nl.parkeerassistent.amsterdam.ui.theme.ParkeerAssistentTheme
@@ -92,7 +94,14 @@ private fun AccountsContent(
 ) {
     Column(Modifier.fillMaxSize()) {
         TitleBar(title = stringResource(R.string.account_header))
-        LazyColumn(Modifier.weight(1f).padding(horizontal = Dimens.paddingNormal)) {
+        LazyColumn(
+            contentPadding = Dimens.contentPadding,
+            verticalArrangement = Arrangement.spacedBy(Dimens.spacingSmall),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background),
+        ) {
+            item { Spacer(Modifier.height(Dimens.spacingNormal)) }
             if (accounts.isEmpty()) {
                 item {
                     HorizontalDivider()
@@ -107,7 +116,6 @@ private fun AccountsContent(
                     HorizontalDivider()
                 }
             }
-            item { HorizontalDivider() }
             items(accounts, key = { it.username }) { account ->
                 SwipeToActionRow(
                     actionLabel = stringResource(R.string.common_delete),
@@ -117,29 +125,24 @@ private fun AccountsContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable { onOpen(account.username) }
-                            .padding(vertical = Dimens.paddingSmall),
+                            .padding(vertical = Dimens.paddingMini),
                         verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(Dimens.spacingNormal),
                     ) {
                         Text(
                             text = account.alias ?: account.username,
                             style = AppType.name,
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(vertical = Dimens.paddingSmall),
+                            modifier = Modifier.padding(Dimens.paddingMini),
                         )
                     }
                 }
-                HorizontalDivider()
+            }
+            item {
+                SuccessButton(onClick = onAdd) {
+                    Text(stringResource(R.string.common_add))
+                }
             }
         }
-        Button(
-            onClick = onAdd,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = AppTheme.colors.success,
-                contentColor = AppTheme.colors.enabled,
-            ),
-            modifier = Modifier.fillMaxWidth().padding(Dimens.paddingNormal),
-        ) { Text(stringResource(R.string.common_add)) }
     }
 }
 
@@ -194,14 +197,9 @@ private fun AccountDetailContent(
             OutlinedTextField(alias, onAliasChange, label = { Text(stringResource(R.string.account_alias)) }, singleLine = true, modifier = Modifier.fillMaxWidth())
             OutlinedTextField(username, onUsernameChange, label = { Text(stringResource(R.string.login_username)) }, singleLine = true, modifier = Modifier.fillMaxWidth())
             OutlinedTextField(password, onPasswordChange, label = { Text(stringResource(R.string.login_password)) }, singleLine = true, modifier = Modifier.fillMaxWidth())
-            Button(
+            SuccessButton(
                 onClick = onSave,
                 enabled = username.isNotEmpty() && password.isNotEmpty(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = AppTheme.colors.success,
-                    contentColor = AppTheme.colors.enabled,
-                ),
-                modifier = Modifier.fillMaxWidth().padding(top = Dimens.paddingSmall),
             ) { Text(stringResource(R.string.common_save)) }
         }
     }

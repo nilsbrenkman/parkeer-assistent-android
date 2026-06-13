@@ -1,12 +1,15 @@
 package nl.parkeerassistent.amsterdam.ui.screen
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,8 +23,8 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import nl.parkeerassistent.amsterdam.R
 import nl.parkeerassistent.amsterdam.ui.components.LicensePlateField
+import nl.parkeerassistent.amsterdam.ui.components.SuccessButton
 import nl.parkeerassistent.amsterdam.ui.components.TitleBar
-import nl.parkeerassistent.amsterdam.ui.theme.AppTheme
 import nl.parkeerassistent.amsterdam.ui.theme.Dimens
 import nl.parkeerassistent.amsterdam.ui.theme.ParkeerAssistentTheme
 import nl.parkeerassistent.amsterdam.ui.visitor.VisitorViewModel
@@ -62,7 +65,14 @@ internal fun AddVisitorContent(
 ) {
     Column(Modifier.fillMaxSize()) {
         TitleBar(title = stringResource(R.string.visitor_add))
-        Column(Modifier.padding(Dimens.paddingNormal)) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(Dimens.spacingSmall),
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(Dimens.contentPadding)
+                .background(MaterialTheme.colorScheme.background),
+        ) {
             LicensePlateField(
                 value = license,
                 onValueChange = onLicenseChange,
@@ -74,16 +84,11 @@ internal fun AddVisitorContent(
                 label = { Text(stringResource(R.string.visitor_name)) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words),
-                modifier = Modifier.fillMaxWidth().padding(top = Dimens.paddingSmall),
+                modifier = Modifier.fillMaxWidth(),
             )
-            Button(
+            SuccessButton(
                 onClick = onAdd,
                 enabled = license.isNotEmpty() && name.isNotEmpty(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = AppTheme.colors.success,
-                    contentColor = AppTheme.colors.enabled,
-                ),
-                modifier = Modifier.fillMaxWidth().padding(top = Dimens.paddingNormal),
             ) { Text(stringResource(R.string.common_add)) }
         }
     }

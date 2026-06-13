@@ -1,16 +1,20 @@
 package nl.parkeerassistent.amsterdam.ui.screen
 
 import android.content.Intent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,11 +26,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import nl.parkeerassistent.amsterdam.R
-import nl.parkeerassistent.amsterdam.ui.components.ButtonWait
 import nl.parkeerassistent.amsterdam.ui.components.SectionHeader
+import nl.parkeerassistent.amsterdam.ui.components.SuccessButton
 import nl.parkeerassistent.amsterdam.ui.components.TitleBar
 import nl.parkeerassistent.amsterdam.ui.payment.PaymentViewModel
 import nl.parkeerassistent.amsterdam.ui.theme.AppTheme
@@ -74,8 +79,12 @@ private fun PaymentContent(
     Column(Modifier.fillMaxSize()) {
         TitleBar(title = stringResource(R.string.user_add_balance))
         Column(
-            Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(Dimens.paddingNormal),
             verticalArrangement = Arrangement.spacedBy(Dimens.spacingSmall),
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(Dimens.contentPadding)
+                .background(MaterialTheme.colorScheme.background),
         ) {
             SectionHeader(stringResource(R.string.payment_amount))
             AMOUNTS.chunked(3).forEach { rowAmounts ->
@@ -101,15 +110,11 @@ private fun PaymentContent(
                 )
             }
 
-            Button(
+            SuccessButton(
                 onClick = onPay,
                 enabled = amount != 0 && method.isNotEmpty() && !wait,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = AppTheme.colors.success,
-                    contentColor = AppTheme.colors.enabled,
-                ),
-                modifier = Modifier.fillMaxWidth().padding(top = Dimens.paddingNormal),
-            ) { ButtonWait(wait) { Text(stringResource(R.string.payment_start)) } }
+                wait = wait,
+            ) { Text(stringResource(R.string.payment_start)) }
         }
     }
 }
@@ -119,12 +124,20 @@ private fun SelectableButton(text: String, selected: Boolean, onClick: () -> Uni
     Button(
         onClick = onClick,
         colors = if (selected) {
-            ButtonDefaults.buttonColors(containerColor = AppTheme.colors.header, contentColor = AppTheme.colors.enabled)
+            ButtonDefaults.buttonColors(
+                containerColor = AppTheme.colors.header,
+                contentColor = AppTheme.colors.onHeader,
+            )
         } else {
-            ButtonDefaults.buttonColors(containerColor = AppTheme.colors.bw70)
+            ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.onSurface,
+            )
         },
-        modifier = modifier,
-    ) { Text(text) }
+        shape = RoundedCornerShape(Dimens.radiusSmall),
+        modifier = modifier
+            .height(48.dp),
+    ) { Text(text, style = MaterialTheme.typography.labelMedium) }
 }
 
 @Preview(showBackground = true, heightDp = 700)

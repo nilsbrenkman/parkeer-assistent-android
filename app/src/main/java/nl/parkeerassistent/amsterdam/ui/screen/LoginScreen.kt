@@ -1,6 +1,5 @@
 package nl.parkeerassistent.amsterdam.ui.screen
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,11 +8,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -40,10 +40,9 @@ import nl.parkeerassistent.amsterdam.auth.Biometrics
 import nl.parkeerassistent.amsterdam.data.local.CredentialStore
 import nl.parkeerassistent.amsterdam.data.model.Credentials
 import nl.parkeerassistent.amsterdam.ui.account.AccountViewModel
-import nl.parkeerassistent.amsterdam.ui.components.ButtonWait
 import nl.parkeerassistent.amsterdam.ui.components.SectionHeader
+import nl.parkeerassistent.amsterdam.ui.components.SuccessButton
 import nl.parkeerassistent.amsterdam.ui.session.SessionViewModel
-import nl.parkeerassistent.amsterdam.ui.theme.AppTheme
 import nl.parkeerassistent.amsterdam.ui.theme.Dimens
 import nl.parkeerassistent.amsterdam.ui.theme.ParkeerAssistentTheme
 import nl.parkeerassistent.amsterdam.util.findActivity
@@ -188,30 +187,37 @@ internal fun LoginContent(
                 }
             }
 
-            Button(
+            SuccessButton(
                 onClick = onLogin,
                 enabled = username.isNotEmpty() && password.isNotEmpty(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = AppTheme.colors.success,
-                    contentColor = AppTheme.colors.enabled,
-                ),
-                modifier = Modifier.fillMaxWidth().padding(top = Dimens.paddingNormal),
-            ) {
-                ButtonWait(wait) { Text(stringResource(R.string.login_login)) }
-            }
+                wait = wait,
+            ) { Text(stringResource(R.string.login_login)) }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AccountPicker(accounts: List<Credentials>, selectedUsername: String, onSelect: (Credentials) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
     val current = accounts.firstOrNull { it.username == selectedUsername }
-    Box(Modifier.padding(top = Dimens.paddingSmall)) {
-        OutlinedButton(onClick = { expanded = true }, modifier = Modifier.fillMaxWidth()) {
-            Text(current?.let { it.alias ?: it.username } ?: stringResource(R.string.account_label))
-        }
-        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = it },
+        modifier = Modifier.padding(top = Dimens.paddingSmall),
+    ) {
+        OutlinedTextField(
+            value = current?.let { it.alias ?: it.username } ?: "",
+            onValueChange = {},
+            readOnly = true,
+            label = { Text(stringResource(R.string.account_label)) },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
+            modifier = Modifier
+                .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                .fillMaxWidth(),
+        )
+        ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             accounts.forEach { account ->
                 DropdownMenuItem(
                     text = { Text(account.alias ?: account.username) },

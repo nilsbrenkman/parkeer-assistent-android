@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
@@ -39,7 +40,7 @@ fun SwipeToActionRow(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(AppTheme.colors.danger)
+                    .background(AppTheme.colors.danger, shape = RoundedCornerShape(Dimens.radiusSmall),)
                     .padding(horizontal = Dimens.paddingNormal),
                 contentAlignment = Alignment.CenterEnd,
             ) {
@@ -47,8 +48,14 @@ fun SwipeToActionRow(
             }
         },
     ) {
-        Box(Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface)) { content() }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    color = MaterialTheme.colorScheme.surface,
+                    shape = RoundedCornerShape(Dimens.radiusSmall),
+                )
+                .padding(horizontal = Dimens.paddingSmall),
+        ) { content() }
     }
 }

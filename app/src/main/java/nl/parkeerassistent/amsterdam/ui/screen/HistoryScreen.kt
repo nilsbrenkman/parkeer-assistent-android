@@ -1,17 +1,21 @@
 package nl.parkeerassistent.amsterdam.ui.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -59,18 +63,24 @@ private fun HistoryListContent(history: List<Parking>?, onOpen: (parkingId: Long
             history.isEmpty() -> Box(Modifier.fillMaxSize(), Alignment.Center) { Text(stringResource(R.string.parking_no_history)) }
             else -> {
                 val groups = history.groupBy { YearMonth.from(DateUtil.toLocalDate(it.startTime) ?: LocalDate.now()) }
-                LazyColumn(Modifier.fillMaxSize().padding(horizontal = Dimens.paddingNormal)) {
+                LazyColumn(
+                    contentPadding = Dimens.contentPadding,
+                    verticalArrangement = Arrangement.spacedBy(Dimens.spacingSmall),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.background),
+                ) {
                     groups.forEach { (month, rows) ->
                         item(key = "h-$month") {
                             SectionHeader(
                                 DateUtil.formatMonthYear(month.atDay(1)),
-                                Modifier.padding(top = Dimens.paddingNormal, bottom = Dimens.paddingMini),
+                                Modifier.padding(bottom = Dimens.paddingMini),
                             )
                         }
                         items(rows, key = { it.id }) { row ->
                             HistoryRow(row, onClick = { onOpen(row.id) })
-                            HorizontalDivider()
                         }
+                        item { Spacer(Modifier.height(Dimens.spacingLarge)) }
                     }
                 }
             }
@@ -81,12 +91,13 @@ private fun HistoryListContent(history: List<Parking>?, onOpen: (parkingId: Long
 @Composable
 private fun HistoryRow(parking: Parking, onClick: () -> Unit) {
     Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(Dimens.spacingSmall),
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
-            .padding(vertical = Dimens.paddingMini),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(Dimens.spacingSmall),
+            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(Dimens.radiusSmall))
+            .padding(all = Dimens.paddingMini),
     ) {
         DateUtil.toLocalDate(parking.startTime)?.let { CalendarDate(it) }
         LicensePlate(License.format(parking.license))

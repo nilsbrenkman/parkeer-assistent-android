@@ -15,8 +15,18 @@ import java.time.format.DateTimeFormatter
  */
 object DateUtil {
 
-    /** App-facing wire format, matches iOS `dateTimeFormatter` (`yyyy-MM-dd'T'HH:mm:ssZZZZZ`). */
+    /** App-facing wire format for *output* (`toWire`), matches iOS `dateTimeFormatter`. */
     private val wireFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX")
+
+    /**
+     * Lenient *parser* for wire date-times. The server's live path
+     * (`DateUtil.dateFormatter`, pinned to Europe/Amsterdam, pattern `X`) emits a whole-hour
+     * offset like `+02`, while mock/UTC paths emit `Z` and some callers emit `+02:00`. A strict
+     * `XXX` formatter rejects `+02`, so live parking times failed to parse; the optional sections
+     * accept all three forms.
+     */
+    private val wireParser: DateTimeFormatter =
+        DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss[XXX][XX][X]")
     private val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
     private val parkingDisplayFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM HH:mm")
 
@@ -24,7 +34,7 @@ object DateUtil {
 
     /** Parses a wire date-time, or null if malformed. */
     fun parseWire(value: String): OffsetDateTime? =
-        runCatching { OffsetDateTime.parse(value, wireFormatter) }.getOrNull()
+        runCatching { OffsetDateTime.parse(value, wireParser) }.getOrNull()
 
     /** Formats a wire date-time as `dd/MM HH:mm` for parking rows (iOS `parkingFormatter`). */
     fun formatParking(value: String): String =

@@ -33,7 +33,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -77,11 +76,11 @@ fun HeaderView(
                         onClick = { expanded = true },
                         modifier = Modifier
                             .size(48.dp)
-                            .border(1.2.dp, Color.White, RoundedCornerShape(4.dp)),
+                            .border(1.2.dp, AppTheme.colors.onHeader, RoundedCornerShape(4.dp)),
                     ) {
                         Text(
                             "≡",
-                            color = Color.White,
+                            color = AppTheme.colors.onHeader,
                             fontSize = 48.sp,
                             lineHeight = 48.sp,
                             textAlign = TextAlign.Center,

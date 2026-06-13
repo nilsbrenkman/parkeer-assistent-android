@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -13,8 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,7 +27,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,6 +36,7 @@ import nl.parkeerassistent.amsterdam.R
 import nl.parkeerassistent.amsterdam.data.model.Visitor
 import nl.parkeerassistent.amsterdam.ui.components.DataBox
 import nl.parkeerassistent.amsterdam.ui.components.RegimeDatePickerDialog
+import nl.parkeerassistent.amsterdam.ui.components.SuccessButton
 import nl.parkeerassistent.amsterdam.ui.components.TitleBar
 import nl.parkeerassistent.amsterdam.ui.components.VisitorView
 import nl.parkeerassistent.amsterdam.ui.components.WheelSelector
@@ -215,49 +215,71 @@ private fun AddParkingContent(
     Column(Modifier.fillMaxSize()) {
         TitleBar(title = stringResource(R.string.parking_header))
         Column(
+            verticalArrangement = Arrangement.spacedBy(Dimens.spacingSmall),
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(Dimens.paddingNormal),
-            verticalArrangement = Arrangement.spacedBy(Dimens.spacingNormal),
+                .padding(Dimens.contentPadding)
+                .background(MaterialTheme.colorScheme.background),
         ) {
-            VisitorView(visitor)
+            Spacer(Modifier.height(Dimens.spacingSmall))
+
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+            ) { VisitorView(visitor) }
+
+            Spacer(Modifier.height(Dimens.spacingSmall))
 
             Row(horizontalArrangement = Arrangement.spacedBy(Dimens.spacingNormal)) {
                 DataBox(
                     title = stringResource(R.string.parking_date),
                     content = dateText,
-                    modifier = Modifier.weight(1f).alpha(if (dateActive) 1f else 0.5f).clickable(onClick = onDateClick),
+                    modifier = Modifier
+                        .weight(1f)
+                        .alpha(if (dateActive) 1f else 0.5f)
+                        .clickable(onClick = onDateClick),
                 )
                 DataBox(
                     title = stringResource(R.string.parking_start_time),
                     content = startTimeText,
-                    modifier = Modifier.weight(1f).alpha(if (startTimeActive) 1f else 0.5f).clickable(onClick = onStartTimeClick),
+                    modifier = Modifier
+                        .weight(1f)
+                        .alpha(if (startTimeActive) 1f else 0.5f)
+                        .clickable(onClick = onStartTimeClick),
                 )
-                SignBox(meterId = meterId, modifier = Modifier.weight(1f).clickable(onClick = onPickMeter))
+                SignBox(
+                    meterId = meterId,
+                    modifier = Modifier
+                        .weight(1f)
+                        .clickable(onClick = onPickMeter)
+                )
             }
 
             Row(
-                modifier = Modifier.alpha(if (!startTimeActive) 1f else 0.5f).clickable(onClick = onMinutesClick),
                 horizontalArrangement = Arrangement.spacedBy(Dimens.spacingNormal),
+                modifier = Modifier
+                    .alpha(if (!startTimeActive) 1f else 0.5f)
+                    .clickable(onClick = onMinutesClick),
             ) {
                 DataBox(stringResource(R.string.parking_minutes), minutesText, Modifier.weight(1f))
                 DataBox(stringResource(R.string.parking_end_time), endTimeText, Modifier.weight(1f))
                 DataBox(stringResource(R.string.parking_cost), "€ $costText", Modifier.weight(1f))
             }
 
-            Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                WheelSelector(radius = 75.dp, thickness = 16.dp, onChange = onWheel)
+            Spacer(Modifier.height(Dimens.spacingSmall))
+
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxWidth(),
+            ) {
+                WheelSelector(radius = 75.dp, thickness = 25.dp, onChange = onWheel)
             }
 
-            Button(
+            SuccessButton(
                 onClick = onAdd,
                 enabled = addEnabled,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = AppTheme.colors.success,
-                    contentColor = AppTheme.colors.enabled,
-                ),
-                modifier = Modifier.fillMaxWidth(),
             ) { Text(stringResource(R.string.common_add)) }
         }
     }
@@ -279,7 +301,7 @@ private fun SignBox(meterId: Long?, modifier: Modifier = Modifier) {
                 text = meterId?.toString() ?: "...",
                 style = AppType.dataBoxContent,
                 fontWeight = FontWeight.Bold,
-                color = if (meterId != null) Color.White else AppTheme.colors.danger,
+                color = if (meterId != null) AppTheme.colors.onHeader else AppTheme.colors.danger,
             )
         }
     }

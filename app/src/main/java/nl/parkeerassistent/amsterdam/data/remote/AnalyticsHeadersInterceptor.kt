@@ -14,7 +14,7 @@ class AnalyticsHeadersInterceptor(private val device: DeviceInfo) : Interceptor 
             .header("X-ParkeerAssistent-SDK", device.osVersion)
             .header("X-ParkeerAssistent-Version", device.appVersion)
             .header("X-ParkeerAssistent-Build", device.appBuild)
-            .header("X-ParkeerAssistent-Mock", "true")
+//            .header("X-ParkeerAssistent-Mock", "true")
             .build()
         return chain.proceed(request)
     }

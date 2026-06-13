@@ -1,18 +1,21 @@
 package nl.parkeerassistent.amsterdam.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -43,6 +46,38 @@ fun ButtonWait(wait: Boolean, modifier: Modifier = Modifier, content: @Composabl
     }
 }
 
+/**
+ * Full-width filled call-to-action button in the app's success green
+ * ([AppTheme.colors.success]) — the standard green action button across screens.
+ * When [wait] is true it shows a spinner in place of [content].
+ */
+@Composable
+fun SuccessButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    wait: Boolean = false,
+    content: @Composable () -> Unit,
+) {
+    Button(
+        onClick = onClick,
+        enabled = enabled,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = AppTheme.colors.success,
+            contentColor = AppTheme.colors.enabled,
+        ),
+        contentPadding = PaddingValues(vertical = Dimens.paddingSmall),
+        shape = RoundedCornerShape(Dimens.radiusNormal),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = Dimens.spacingLarge),
+    ) {
+        ProvideTextStyle(AppType.button) {
+            if (wait) ButtonWait(wait = true) { content() } else content()
+        }
+    }
+}
+
 /** "Header:" in the section-header style, de-emphasized (iOS `SectionHeader`). */
 @Composable
 fun SectionHeader(header: String, modifier: Modifier = Modifier) {
@@ -69,13 +104,12 @@ fun DataBox(title: String, content: String, modifier: Modifier = Modifier) {
     Column(modifier, verticalArrangement = Arrangement.spacedBy(Dimens.spacingXSmall)) {
         Text("$title:", style = AppType.dataBoxTitle)
         Box(
+            contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp)
                 .clip(RoundedCornerShape(Dimens.radiusSmall))
-                .background(AppTheme.colors.bw70)
-                .border(1.dp, MaterialTheme.colorScheme.onSurface, RoundedCornerShape(Dimens.radiusSmall)),
-            contentAlignment = Alignment.Center,
+                .background(MaterialTheme.colorScheme.surface),
         ) {
             Text(content, style = AppType.dataBoxContent)
         }

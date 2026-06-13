@@ -16,7 +16,7 @@ import java.util.Locale
 /** Small day-of-week + day-of-month stack (iOS `CalendarDate`). */
 @Composable
 fun CalendarDate(date: LocalDate, modifier: Modifier = Modifier) {
-    Column(modifier = modifier.width(40.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(modifier = modifier.width(42.dp), horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             text = date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()).uppercase(),
             style = AppType.calendarDow,

@@ -98,3 +98,10 @@ Retrofit/OkHttp → server**. DI is **Koin**; navigation is **Navigation-Compose
 - **`BuildConfig.VERSION_NAME/CODE` aren't generated** — read version from `PackageManager`.
 - **Not testable on the bare emulator:** biometric login (no enrolled fingerprint → degrades to
   manual), notifications (fire at real parking times), Play In-App Review (needs Play distribution).
+- **Edge-to-edge insets are handled once in `AppRoot`** (the app runs `enableEdgeToEdge()`). The root
+  `Scaffold` uses `contentWindowInsets = WindowInsets.statusBars` (so its `padding` reserves only the
+  status bar — header sits below it), and the content `Box` applies `.navigationBarsPadding()` for the
+  bottom. This split is deliberate: a `Scaffold` *consumes* its `contentWindowInsets`, so if the nav
+  bar were left in `contentWindowInsets`, a nested `navigationBarsPadding()` would see zero remaining
+  and screens would draw under the nav bar. Individual screens should NOT re-add system-bar padding
+  (it would double up) — just lay out normally and they're inset above the nav bar.

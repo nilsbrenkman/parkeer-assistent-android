@@ -1,5 +1,6 @@
 package nl.parkeerassistent.amsterdam.ui.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -7,6 +8,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -80,8 +84,12 @@ private fun SettingsContent(
     Column(Modifier.fillMaxSize()) {
         TitleBar(title = stringResource(R.string.settings_header))
         Column(
-            Modifier.fillMaxSize().padding(Dimens.paddingNormal),
             verticalArrangement = Arrangement.spacedBy(Dimens.spacingSmall),
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(Dimens.contentPadding)
+                .background(MaterialTheme.colorScheme.background),
         ) {
             SectionHeader(stringResource(R.string.settings_notifications))
             ToggleRow(stringResource(R.string.settings_on_start), onStart, onStartChange)

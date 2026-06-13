@@ -1,5 +1,7 @@
 package nl.parkeerassistent.amsterdam.ui.theme
 
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.ui.unit.dp
 
 /** Spacing / padding / radius / license dimensions ported from iOS `Constants`. */
@@ -26,4 +28,11 @@ object Dimens {
     val licenseWidth = 150.dp
     val licenseHeight = 36.dp
     val licensePadding = 5.dp
+
+    val scrollPadding = WindowInsets(
+        left = paddingNormal,
+        right = paddingNormal,
+        top = paddingNormal,
+    )
+    val contentPadding = PaddingValues(paddingNormal)
 }

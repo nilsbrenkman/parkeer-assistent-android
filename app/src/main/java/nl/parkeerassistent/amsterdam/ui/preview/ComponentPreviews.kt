@@ -17,6 +17,7 @@ import nl.parkeerassistent.amsterdam.ui.components.LicensePlate
 import nl.parkeerassistent.amsterdam.ui.components.ModalOverlay
 import nl.parkeerassistent.amsterdam.ui.components.Property
 import nl.parkeerassistent.amsterdam.ui.components.SectionHeader
+import nl.parkeerassistent.amsterdam.ui.components.SuccessButton
 import nl.parkeerassistent.amsterdam.ui.components.TitleBar
 import nl.parkeerassistent.amsterdam.ui.components.VisitorView
 import nl.parkeerassistent.amsterdam.ui.components.WheelSelector
@@ -59,6 +60,16 @@ private fun ButtonWaitPreview() = ParkeerAssistentTheme {
     Column(Modifier.padding(8.dp)) {
         ButtonWait(wait = false) { Text("Klaar") }
         ButtonWait(wait = true) { Text("Bezig") }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SuccessButtonPreview() = ParkeerAssistentTheme {
+    Column(Modifier.padding(8.dp)) {
+        SuccessButton(onClick = {}) { Text("Toevoegen") }
+        SuccessButton(onClick = {}, enabled = false) { Text("Uitgeschakeld") }
+        SuccessButton(onClick = {}, wait = true) { Text("Bezig") }
     }
 }
 

@@ -18,4 +18,5 @@ object AppType {
     val calendarDay = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)
     val sectionHeader = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)
     val subSectionHeader = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium)
+    val button = TextStyle(fontSize = 22.sp, fontWeight = FontWeight.SemiBold)
 }

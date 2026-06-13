@@ -12,11 +12,12 @@ import androidx.compose.ui.graphics.Color
  */
 data class AppColors(
     val header: Color,
+    val onHeader: Color,
     val license: Color,
     val licenseBg: Color,
     val licenseBorder: Color,
     val subSectionHeader: Color,
-
+    val dataBox: Color,
     val light: Color,
     val bw70: Color,
     val enabled: Color,
@@ -41,10 +42,12 @@ data class AppColors(
 
 private val SharedColors = AppColors(
     header = Color(0xFF007CBC),
+    onHeader = Color.White,
     license = Color(0xFF000000),
     licenseBg = Color(0xFFF2BA00),
     licenseBorder = Color(0xFF000000),
     subSectionHeader = Color(0xFF808080),
+    dataBox = Color.White,
     light = Color(0xFFFFFFFF),
     bw70 = Color(0xFFEEEEEE),
     enabled = Color(0xFFFFFFFF),

@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,9 +32,9 @@ import nl.parkeerassistent.amsterdam.ui.common.MessageType
 import nl.parkeerassistent.amsterdam.ui.components.LicensePlate
 import nl.parkeerassistent.amsterdam.ui.components.SectionHeader
 import nl.parkeerassistent.amsterdam.ui.components.SubSectionHeader
+import nl.parkeerassistent.amsterdam.ui.components.SuccessButton
 import nl.parkeerassistent.amsterdam.ui.components.SwipeToActionRow
 import nl.parkeerassistent.amsterdam.ui.parking.ParkingViewModel
-import nl.parkeerassistent.amsterdam.ui.theme.AppTheme
 import nl.parkeerassistent.amsterdam.ui.theme.AppType
 import nl.parkeerassistent.amsterdam.ui.theme.Dimens
 import nl.parkeerassistent.amsterdam.ui.theme.ParkeerAssistentTheme
@@ -153,12 +151,15 @@ internal fun UserContent(
         )
 
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(Dimens.paddingNormal),
             verticalArrangement = Arrangement.spacedBy(Dimens.spacingSmall),
+            contentPadding = Dimens.contentPadding,
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
         ) {
-            item { SectionHeader(stringResource(R.string.parking_header)) }
+            item { SectionHeader(
+                header = stringResource(R.string.parking_header),
+            ) }
             val active = parking?.active.orEmpty()
             val scheduled = parking?.scheduled.orEmpty()
             if (active.isEmpty() && scheduled.isEmpty()) {
@@ -203,17 +204,10 @@ internal fun UserContent(
                 }
             }
             item {
-                Button(
+                SuccessButton(
                     onClick = {
                         if ((visitors?.size ?: 0) >= MAX_VISITORS) actions.onTooManyVisitors() else actions.onAddVisitor()
                     },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = AppTheme.colors.success,
-                        contentColor = AppTheme.colors.enabled,
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = Dimens.paddingSmall),
                 ) { Text(stringResource(R.string.visitor_add)) }
             }
         }
