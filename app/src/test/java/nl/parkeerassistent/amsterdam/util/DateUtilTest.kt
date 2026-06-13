@@ -6,6 +6,9 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 
 class DateUtilTest {
 
@@ -45,4 +48,35 @@ class DateUtilTest {
 
     @Test fun `malformed wire date formats to empty`() =
         assertEquals("", DateUtil.formatParking("not-a-date"))
+
+    @Test fun `parseWire accepts the three offset forms the server emits`() {
+        // Whole-hour offset (live path, pattern X), Z (mock/UTC), and +HH:mm (some callers).
+        assertEquals(ZoneOffset.ofHours(2), DateUtil.parseWire("2026-05-29T14:43:00+02")?.offset)
+        assertEquals(ZoneOffset.UTC, DateUtil.parseWire("2026-05-29T14:43:00Z")?.offset)
+        assertEquals(ZoneOffset.ofHours(2), DateUtil.parseWire("2026-05-29T14:43:00+02:00")?.offset)
+    }
+
+    @Test fun `parseWire returns null on malformed input`() =
+        assertNull(DateUtil.parseWire("garbage"))
+
+    @Test fun `toWire round-trips through parseWire`() {
+        val dt = OffsetDateTime.of(2026, 5, 29, 14, 43, 0, 0, ZoneOffset.ofHours(2))
+        assertEquals("2026-05-29T14:43:00+02:00", DateUtil.toWire(dt))
+        assertEquals(dt, DateUtil.parseWire(DateUtil.toWire(dt)))
+    }
+
+    @Test fun `toLocalDate extracts the date in the wire offset`() =
+        assertEquals(LocalDate.of(2026, 5, 29), DateUtil.toLocalDate("2026-05-29T14:43:00+02:00"))
+
+    @Test fun `toLocalDate returns null on malformed input`() =
+        assertNull(DateUtil.toLocalDate("nope"))
+
+    @Test fun `parseTime reads HH mm, rejects malformed`() {
+        assertEquals(9, DateUtil.parseTime("09:00")?.hour)
+        assertEquals(30, DateUtil.parseTime("21:30")?.minute)
+        assertNull(DateUtil.parseTime("9 o'clock"))
+    }
+
+    @Test fun `formatTime renders HH mm`() =
+        assertEquals("09:05", DateUtil.formatTime(LocalDateTime.of(2026, 1, 1, 9, 5)))
 }

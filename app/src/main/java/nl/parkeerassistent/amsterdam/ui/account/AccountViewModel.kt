@@ -48,9 +48,12 @@ class AccountViewModel(private val store: CredentialStore) : ViewModel() {
     }
 
     fun deleteAccount(account: Credentials) {
+        val wasRecent = store.recent == account.username
         store.delete(account)
-        if (store.recent == account.username) store.recent = _accounts.value.firstOrNull()?.username
         reload()
+        // Reassign recent to the first *remaining* account (or null) — mirrors iOS AccountStore.
+        // Must read the reloaded list, not the stale pre-delete one.
+        if (wasRecent) store.recent = _accounts.value.firstOrNull()?.username
     }
 
     var autoLogin: Boolean

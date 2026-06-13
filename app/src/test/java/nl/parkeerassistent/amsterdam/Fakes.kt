@@ -1,14 +1,21 @@
 package nl.parkeerassistent.amsterdam
 
 import nl.parkeerassistent.amsterdam.data.local.CredentialStore
+import nl.parkeerassistent.amsterdam.data.model.AddParkingRequest
 import nl.parkeerassistent.amsterdam.data.model.BalanceResponse
 import nl.parkeerassistent.amsterdam.data.model.Credentials
+import nl.parkeerassistent.amsterdam.data.model.Parking
+import nl.parkeerassistent.amsterdam.data.model.ParkingMeter
 import nl.parkeerassistent.amsterdam.data.model.ParkingResponse
+import nl.parkeerassistent.amsterdam.data.model.PaymentResponse
 import nl.parkeerassistent.amsterdam.data.model.RegimeResponse
 import nl.parkeerassistent.amsterdam.data.model.Response
 import nl.parkeerassistent.amsterdam.data.model.UserResponse
 import nl.parkeerassistent.amsterdam.data.model.Visitor
+import nl.parkeerassistent.amsterdam.data.repository.GeoRepository
 import nl.parkeerassistent.amsterdam.data.repository.LoginRepository
+import nl.parkeerassistent.amsterdam.data.repository.ParkingRepository
+import nl.parkeerassistent.amsterdam.data.repository.PaymentRepository
 import nl.parkeerassistent.amsterdam.data.repository.UserRepository
 import nl.parkeerassistent.amsterdam.data.repository.VisitorRepository
 import nl.parkeerassistent.amsterdam.notifications.ParkingNotifications
@@ -86,4 +93,57 @@ class FakeUserRepository : UserRepository {
     override suspend fun getUser() = userResponse
     override suspend fun getBalance() = balanceResponse
     override suspend fun getRegime(parkingMeterId: Long) = regimeResponse
+}
+
+class FakeParkingRepository : ParkingRepository {
+    var parkingResponse = ParkingResponse(emptyList(), emptyList())
+    var addResult = Response(true)
+    var stopResult = Response(true)
+    var history = listOf<Parking>()
+    var throwOnGetParking: Throwable? = null
+    var throwOnAdd: Throwable? = null
+    var throwOnStop: Throwable? = null
+    var throwOnHistory: Throwable? = null
+    val addRequests = mutableListOf<AddParkingRequest>()
+    val stoppedIds = mutableListOf<Long>()
+    override suspend fun getParking(): ParkingResponse {
+        throwOnGetParking?.let { throw it }
+        return parkingResponse
+    }
+    override suspend fun addParking(request: AddParkingRequest): Response {
+        addRequests.add(request)
+        throwOnAdd?.let { throw it }
+        return addResult
+    }
+    override suspend fun stopParking(id: Long): Response {
+        stoppedIds.add(id)
+        throwOnStop?.let { throw it }
+        return stopResult
+    }
+    override suspend fun getHistory(): List<Parking> {
+        throwOnHistory?.let { throw it }
+        return history
+    }
+}
+
+class FakePaymentRepository : PaymentRepository {
+    var response = PaymentResponse("https://pay.example/redirect")
+    var throwOnCreate: Throwable? = null
+    val requests = mutableListOf<Triple<Long, String, String>>()
+    override suspend fun createPayment(amount: Long, brand: String, lang: String): PaymentResponse {
+        requests.add(Triple(amount, brand, lang))
+        throwOnCreate?.let { throw it }
+        return response
+    }
+}
+
+class FakeGeoRepository : GeoRepository {
+    var nearby = listOf<ParkingMeter>()
+    var inRegion = listOf<ParkingMeter>()
+    var throwOnNearby: Throwable? = null
+    override suspend fun parkingMetersNearby(lat: Double, lon: Double, n: Int): List<ParkingMeter> {
+        throwOnNearby?.let { throw it }
+        return nearby
+    }
+    override suspend fun parkingMetersInRegion(lat: Double, lon: Double): List<ParkingMeter> = inRegion
 }
