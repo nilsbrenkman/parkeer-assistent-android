@@ -82,8 +82,11 @@ Retrofit/OkHttp → server**. DI is **Koin**; navigation is **Navigation-Compose
   swipe-to-stop (no buttons, matching iOS `swipeActions`).
 - Version catalog (`gradle/libs.versions.toml`) for all deps — reference as `libs.*`.
 
-## Critical gotchas (this toolchain is bleeding-edge: AGP 9.2 / Kotlin 2.2.10)
+## Critical gotchas (this toolchain is bleeding-edge: AGP 9.2 / Kotlin 2.4.0 / compileSdk+targetSdk 37)
 
+- **Lint treats `NonObservableLocale` as an error** (newer Compose). In a `@Composable`, never call
+  `Locale.getDefault()` (or `LocaleList.getAdjustedDefault()`) — read the locale observably via
+  `androidx.compose.ui.platform.LocalLocale.current.platformLocale` so it tracks locale changes.
 - **Do NOT use Hilt or KSP.** Hilt's Gradle plugin fails on AGP 9 (`Android BaseExtension not
   found`); KSP collides with AGP's built-in Kotlin. DI is **Koin** (no plugin). If a future feature
   truly needs KSP (Room, Koin annotations), set `android.disallowKotlinSourceSets=false` in

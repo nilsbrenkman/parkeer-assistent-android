@@ -1,6 +1,7 @@
 package nl.parkeerassistent.amsterdam.data.remote.cookie
 
 import android.content.Context
+import androidx.core.content.edit
 
 /**
  * Synchronous persistence for the two session cookies (`token`, `product_id`).
@@ -27,15 +28,15 @@ class PrefsSessionCookieStore(context: Context) : SessionCookieStore {
     override fun get(name: String): String? = prefs.getString(name, null)
 
     override fun put(name: String, value: String) {
-        prefs.edit().putString(name, value).apply()
+        prefs.edit { putString(name, value) }
     }
 
     override fun remove(name: String) {
-        prefs.edit().remove(name).apply()
+        prefs.edit { remove(name) }
     }
 
     override fun clear() {
-        prefs.edit().clear().apply()
+        prefs.edit { clear() }
     }
 
     private companion object {

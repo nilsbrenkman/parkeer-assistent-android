@@ -3,7 +3,7 @@ package nl.parkeerassistent.amsterdam.ui.screen
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.SemanticsMatcher
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import nl.parkeerassistent.amsterdam.ui.theme.ParkeerAssistentTheme
 import org.junit.Rule

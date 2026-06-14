@@ -2,6 +2,7 @@ package nl.parkeerassistent.amsterdam.util
 
 import android.content.Context
 import android.os.Build
+import androidx.core.content.edit
 import java.util.UUID
 
 /**
@@ -29,7 +30,7 @@ class AndroidDeviceInfo(context: Context) : DeviceInfo {
     init {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         userId = prefs.getString(KEY_USER_ID, null)
-            ?: UUID.randomUUID().toString().also { prefs.edit().putString(KEY_USER_ID, it).apply() }
+            ?: UUID.randomUUID().toString().also { prefs.edit { putString(KEY_USER_ID, it) } }
 
         val info = context.packageManager.getPackageInfo(context.packageName, 0)
         appVersion = info.versionName ?: ""

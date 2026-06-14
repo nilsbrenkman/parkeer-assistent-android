@@ -7,15 +7,13 @@ plugins {
 android {
     namespace = "nl.parkeerassistent.amsterdam"
     compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
+        version = release(37)
     }
 
     defaultConfig {
         applicationId = "nl.parkeerassistent.amsterdam"
         minSdk = 28
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 1
         versionName = "1.0"
 
@@ -44,6 +42,7 @@ android {
     testOptions {
         unitTests.isReturnDefaultValues = true
     }
+    buildToolsVersion = "37.0.0"
 }
 
 dependencies {
