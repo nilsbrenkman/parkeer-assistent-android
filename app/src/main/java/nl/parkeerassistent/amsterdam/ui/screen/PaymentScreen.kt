@@ -67,7 +67,7 @@ fun PaymentScreen(paymentVm: PaymentViewModel = koinViewModel()) {
 }
 
 @Composable
-private fun PaymentContent(
+internal fun PaymentContent(
     amount: Int,
     method: String,
     wait: Boolean,

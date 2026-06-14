@@ -36,7 +36,7 @@ class UserContentTest {
             }
         }
         rule.onNodeWithText("Erik").assertExists()
-        rule.onNodeWithText("22BBB2").assertExists()
+        rule.onNodeWithText("22-BBB-2").assertExists()
         rule.onNodeWithText(s(R.string.parking_no_sessions)).assertExists()
     }
 

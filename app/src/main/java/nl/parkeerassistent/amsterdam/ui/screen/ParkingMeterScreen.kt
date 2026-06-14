@@ -88,7 +88,7 @@ fun ParkingMeterScreen(
 }
 
 @Composable
-private fun ParkingMeterContent(meters: List<ParkingMeter>, onSelect: (ParkingMeter) -> Unit) {
+internal fun ParkingMeterContent(meters: List<ParkingMeter>, onSelect: (ParkingMeter) -> Unit) {
     Column(Modifier.fillMaxSize()) {
         TitleBar(title = stringResource(R.string.parking_sign))
         LazyColumn(Modifier.fillMaxSize().padding(horizontal = Dimens.paddingNormal)) {

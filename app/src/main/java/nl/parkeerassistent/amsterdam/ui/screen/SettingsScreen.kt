@@ -68,7 +68,7 @@ fun SettingsScreen(
 }
 
 @Composable
-private fun SettingsContent(
+internal fun SettingsContent(
     onStart: Boolean,
     onStop: Boolean,
     reminders: Boolean,

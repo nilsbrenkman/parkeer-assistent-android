@@ -62,7 +62,7 @@ fun ParkingDetailScreen(
 }
 
 @Composable
-private fun ParkingDetailContent(parking: Parking?, name: String, onStop: () -> Unit) {
+internal fun ParkingDetailContent(parking: Parking?, name: String, onStop: () -> Unit) {
     Column(Modifier.fillMaxSize()) {
         TitleBar(title = stringResource(R.string.parking_details))
         if (parking == null) {

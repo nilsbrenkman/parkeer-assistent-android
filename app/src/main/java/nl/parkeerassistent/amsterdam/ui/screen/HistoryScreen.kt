@@ -53,7 +53,7 @@ fun HistoryListScreen(
 }
 
 @Composable
-private fun HistoryListContent(history: List<Parking>?, onOpen: (parkingId: Long) -> Unit) {
+internal fun HistoryListContent(history: List<Parking>?, onOpen: (parkingId: Long) -> Unit) {
     Column(Modifier.fillMaxSize()) {
         TitleBar(title = stringResource(R.string.parking_history))
         when {

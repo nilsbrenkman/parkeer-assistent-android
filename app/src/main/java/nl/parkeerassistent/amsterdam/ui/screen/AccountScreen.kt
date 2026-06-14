@@ -86,7 +86,7 @@ fun AccountsScreen(
 }
 
 @Composable
-private fun AccountsContent(
+internal fun AccountsContent(
     accounts: List<Credentials>,
     onOpen: (username: String) -> Unit,
     onAdd: () -> Unit,
@@ -178,7 +178,7 @@ fun AccountDetailScreen(
 }
 
 @Composable
-private fun AccountDetailContent(
+internal fun AccountDetailContent(
     isNew: Boolean,
     alias: String,
     username: String,

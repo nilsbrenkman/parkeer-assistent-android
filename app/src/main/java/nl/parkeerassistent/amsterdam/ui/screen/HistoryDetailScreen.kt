@@ -47,7 +47,7 @@ fun HistoryDetailScreen(
 }
 
 @Composable
-private fun HistoryDetailContent(parking: Parking?, name: String) {
+internal fun HistoryDetailContent(parking: Parking?, name: String) {
     Column(Modifier.fillMaxSize()) {
         TitleBar(title = stringResource(R.string.parking_details))
         if (parking == null) {

@@ -309,11 +309,20 @@ the current Snackbar) and the payment success-poll are also fan-out/polish items
   fakeable on plain JVM (Robolectric would choke on the Keystore-backed credential store). DI binds
   `single<Interface> { Impl(...) }`.
 - ✅ **Compose UI tests** (`app/src/androidTest`, run via `connectedDebugAndroidTest` on the
-  emulator — 9 tests green): exercise the stateless `*Content` composables directly (no Koin) —
-  `LoginContentTest` (button enable/disable + click + remember toggle), `AddVisitorContentTest`
-  (enable/disable + click + field labels), `UserContentTest` (renders visitor + empty parking,
-  add-visitor callback). The `*Content` composables tested were made `internal` (visible to the
-  androidTest source set); strings read via `targetContext.getString`.
+  emulator — 36 tests green): exercise the stateless `*Content` composables directly (no Koin),
+  one test class per screen —
+  `LoginContentTest`, `AddVisitorContentTest`, `UserContentTest`,
+  `PaymentContentTest` (amount/method selection → callbacks, pay enable/disable, in-progress spinner
+  swap), `AddParkingContentTest` (renders visitor/date/cost/meter, add enable/disable, sign-box →
+  pick-meter), `AccountContentTest` (list + empty state + open/add, detail save enable/disable),
+  `SettingsContentTest` (section/labels, switch checked-state + toggle callback via `isToggleable()`),
+  `HistoryListContentTest` (empty + formatted plate + row → open id), `ParkingDetailContentTest`
+  (missing placeholder, details + stop callback), `HistoryDetailContentTest`, `ParkingMeterContentTest`
+  (renders id/name/distance, row → select). The `*Content` composables tested were made `internal`
+  (visible to the androidTest source set); strings read via `targetContext.getString`. Gotchas baked
+  into assertions: `LicensePlate`/`SectionHeader` reformat their text (`12ABC3`→`12-ABC-3`, headers
+  get a trailing `:`), and `SuccessButton(wait=true)` replaces its label with a spinner. The stock
+  `ExampleInstrumentedTest` template was removed.
 - ✅ App icon + logo (see Phase 5 note); edge-to-edge (`enableEdgeToEdge`); dark theme via
   `LocalAppColors` dark variants + Material dark scheme.
 - ⬜ iOS-style confirmation **dialogs** (vs the current Snackbar) — deferred by request.

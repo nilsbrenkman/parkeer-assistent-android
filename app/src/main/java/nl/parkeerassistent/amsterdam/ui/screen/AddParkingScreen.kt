@@ -194,7 +194,7 @@ fun AddParkingScreen(
 }
 
 @Composable
-private fun AddParkingContent(
+internal fun AddParkingContent(
     visitor: Visitor,
     dateText: String,
     startTimeText: String,
