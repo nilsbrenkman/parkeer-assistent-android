@@ -4,8 +4,10 @@ import kotlinx.serialization.json.Json
 import nl.parkeerassistent.amsterdam.BuildConfig
 import nl.parkeerassistent.amsterdam.data.remote.AnalyticsHeadersInterceptor
 import nl.parkeerassistent.amsterdam.data.remote.ErrorInterceptor
+import nl.parkeerassistent.amsterdam.data.remote.cookie.PrefsSessionCookieStore
 import nl.parkeerassistent.amsterdam.data.remote.cookie.SessionCookieJar
 import nl.parkeerassistent.amsterdam.data.remote.cookie.SessionCookieStore
+import nl.parkeerassistent.amsterdam.util.AndroidDeviceInfo
 import nl.parkeerassistent.amsterdam.util.DeviceInfo
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -18,9 +20,9 @@ import java.util.concurrent.TimeUnit
 
 val networkModule = module {
 
-    single { SessionCookieStore(androidContext()) }
+    single<SessionCookieStore> { PrefsSessionCookieStore(androidContext()) }
     single { SessionCookieJar(get()) }
-    single { DeviceInfo(androidContext()) }
+    single<DeviceInfo> { AndroidDeviceInfo(androidContext()) }
 
     single {
         // Tolerate fields the client doesn't model; omit nulls in request bodies (matches iOS).

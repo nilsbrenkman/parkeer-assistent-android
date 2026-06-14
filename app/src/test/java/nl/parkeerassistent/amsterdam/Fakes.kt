@@ -12,6 +12,7 @@ import nl.parkeerassistent.amsterdam.data.model.RegimeResponse
 import nl.parkeerassistent.amsterdam.data.model.Response
 import nl.parkeerassistent.amsterdam.data.model.UserResponse
 import nl.parkeerassistent.amsterdam.data.model.Visitor
+import nl.parkeerassistent.amsterdam.data.remote.cookie.SessionCookieStore
 import nl.parkeerassistent.amsterdam.data.repository.GeoRepository
 import nl.parkeerassistent.amsterdam.data.repository.LoginRepository
 import nl.parkeerassistent.amsterdam.data.repository.ParkingRepository
@@ -20,6 +21,7 @@ import nl.parkeerassistent.amsterdam.data.repository.UserRepository
 import nl.parkeerassistent.amsterdam.data.repository.VisitorRepository
 import nl.parkeerassistent.amsterdam.notifications.ParkingNotifications
 import nl.parkeerassistent.amsterdam.stats.StatsStore
+import nl.parkeerassistent.amsterdam.util.DeviceInfo
 import nl.parkeerassistent.amsterdam.util.StringProvider
 
 /** Test doubles for the Context-backed collaborators + repositories. */
@@ -27,6 +29,23 @@ import nl.parkeerassistent.amsterdam.util.StringProvider
 class FakeStringProvider : StringProvider {
     override fun get(resId: Int): String = "res:$resId"
 }
+
+/** In-memory [SessionCookieStore] for the cookie-jar whitelist/expiry tests. */
+class FakeSessionCookieStore : SessionCookieStore {
+    val map = mutableMapOf<String, String>()
+    var cleared = false
+    override fun get(name: String): String? = map[name]
+    override fun put(name: String, value: String) { map[name] = value }
+    override fun remove(name: String) { map.remove(name) }
+    override fun clear() { map.clear(); cleared = true }
+}
+
+class FakeDeviceInfo(
+    override val userId: String = "user-1",
+    override val osVersion: String = "14",
+    override val appVersion: String = "1.2.3",
+    override val appBuild: String = "42",
+) : DeviceInfo
 
 class FakeStatsStore : StatsStore {
     var loginCount = 0

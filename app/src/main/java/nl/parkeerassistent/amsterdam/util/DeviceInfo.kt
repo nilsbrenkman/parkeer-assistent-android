@@ -7,13 +7,24 @@ import java.util.UUID
 /**
  * Values for the `X-ParkeerAssistent-*` analytics headers (port of iOS `addAnalyticHeaders`).
  * [userId] is a stable per-install UUID, generated once and persisted.
+ *
+ * Extracted as an interface so the analytics-headers interceptor is fakeable on plain JVM (the
+ * same testability pattern as the other Context-backed collaborators).
  */
-class DeviceInfo(context: Context) {
-
+interface DeviceInfo {
     val userId: String
-    val osVersion: String = Build.VERSION.RELEASE ?: ""
+    val osVersion: String
     val appVersion: String
     val appBuild: String
+}
+
+/** The production [DeviceInfo], reading the install UUID from prefs and the version from the package. */
+class AndroidDeviceInfo(context: Context) : DeviceInfo {
+
+    override val userId: String
+    override val osVersion: String = Build.VERSION.RELEASE ?: ""
+    override val appVersion: String
+    override val appBuild: String
 
     init {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)

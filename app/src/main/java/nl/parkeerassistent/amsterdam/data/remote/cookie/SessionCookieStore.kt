@@ -5,23 +5,36 @@ import android.content.Context
 /**
  * Synchronous persistence for the two session cookies (`token`, `product_id`).
  * Mirrors the iOS `ApiClient` cookie persistence (UserDefaults key `Cookies`).
- * Backed by [android.content.SharedPreferences] because [okhttp3.CookieJar] is synchronous.
+ *
+ * Extracted as an interface so [SessionCookieJar]'s whitelist/expiry logic is fakeable on plain
+ * JVM (the same testability pattern as `StringProvider`/`CredentialStore`/`StatsStore`).
  */
-class SessionCookieStore(context: Context) {
+interface SessionCookieStore {
+    fun get(name: String): String?
+    fun put(name: String, value: String)
+    fun remove(name: String)
+    fun clear()
+}
+
+/**
+ * The production [SessionCookieStore], backed by [android.content.SharedPreferences] because
+ * [okhttp3.CookieJar] is synchronous.
+ */
+class PrefsSessionCookieStore(context: Context) : SessionCookieStore {
 
     private val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
-    fun get(name: String): String? = prefs.getString(name, null)
+    override fun get(name: String): String? = prefs.getString(name, null)
 
-    fun put(name: String, value: String) {
+    override fun put(name: String, value: String) {
         prefs.edit().putString(name, value).apply()
     }
 
-    fun remove(name: String) {
+    override fun remove(name: String) {
         prefs.edit().remove(name).apply()
     }
 
-    fun clear() {
+    override fun clear() {
         prefs.edit().clear().apply()
     }
 

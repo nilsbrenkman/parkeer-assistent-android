@@ -131,7 +131,8 @@ Sort orders / comparators (iOS `Comparable` on `Parking`/`Visitor`) become Kotli
   interceptor, 30s/60s timeouts), and `Retrofit` (base URL from `BuildConfig.SERVER_BASE_URL`,
   kotlinx converter). Registered in `ParkeerAssistentApp` via `startKoin { modules(networkModule) }`.
 - Service interfaces are added in Phase 3; the shared error/message channel in Phase 4.
-- _Deferred to Phase 8:_ unit tests for the cookie-jar whitelist/expiry logic.
+- ✅ _Phase 8:_ `SessionCookieJarTest` covers the cookie-jar whitelist/expiry logic;
+  `AnalyticsHeadersInterceptorTest` + `ErrorInterceptorTest` cover the two interceptors.
 
 ### Phase 3 — API services + repositories ✅ DONE
 - 6 Retrofit `interface`s in `data/remote/` (`LoginApi, UserApi, VisitorApi, ParkingApi,
@@ -293,11 +294,15 @@ the current Snackbar) and the payment success-poll are also fan-out/polish items
   (previously hardcoded Dutch). Interval labels / brand names (iDEAL, €) stay literal.
 
 ### Phase 8 — Testing & polish (in progress)
-**36 JVM unit tests, all green** (`./gradlew test`, JUnit4, no Android/Robolectric):
+**JVM unit tests, all green** (`./gradlew test`, JUnit4, no Android/Robolectric):
 - ✅ `util/LicenseTest` (all 5 sidecodes + normalisation + no-match), `util/DateUtilTest` (cost,
   time-balance, regime-day mapping, parking-time formatting).
 - ✅ `data/repository/RepositoryTest` (MockWebServer — the 6 Retrofit interfaces + repos +
   kotlinx-serialization: HTTP method/path, request bodies, response decoding, list-unwrapping).
+- ✅ **Networking layer** (`data/remote/`): `SessionCookieJarTest` (whitelist `token`/`product_id`,
+  empty/expired → remove, host/path scoping, `clear()`), `AnalyticsHeadersInterceptorTest`
+  (the 5 `X-ParkeerAssistent-*` headers, via MockWebServer + `FakeDeviceInfo`), `ErrorInterceptorTest`
+  (200 passthrough; 401/403 → `Unauthorized` + session clear; other non-2xx → `ServerError(body)`).
 - ✅ **ViewModel tests** (`SessionViewModelTest` 8, `VisitorViewModelTest` 3, `UserViewModelTest`
   2): login success/failure/throw, remember→credential storage, `checkLoggedIn`, unauthorized→drop
   session, `consumeAutoLogin` one-shot, logout; visitor sort order + notifications feed + add/
@@ -305,11 +310,12 @@ the current Snackbar) and the payment success-poll are also fan-out/polish items
   (`UnconfinedTestDispatcher`) + `Fakes.kt`.
 - **Testability enabler:** extracted interfaces for the Context-backed collaborators —
   `StringProvider`/`AndroidStringProvider`, `CredentialStore`/`EncryptedCredentialStore`,
-  `StatsStore`/`PrefsStatsStore`, `ParkingNotifications`/`AlarmParkingNotifications` — so VMs are
-  fakeable on plain JVM (Robolectric would choke on the Keystore-backed credential store). DI binds
-  `single<Interface> { Impl(...) }`.
+  `StatsStore`/`PrefsStatsStore`, `ParkingNotifications`/`AlarmParkingNotifications`,
+  `SessionCookieStore`/`PrefsSessionCookieStore`, `DeviceInfo`/`AndroidDeviceInfo` — so VMs and the
+  networking layer are fakeable on plain JVM (Robolectric would choke on the Keystore-backed
+  credential store). DI binds `single<Interface> { Impl(...) }`.
 - ✅ **Compose UI tests** (`app/src/androidTest`, run via `connectedDebugAndroidTest` on the
-  emulator — 36 tests green): exercise the stateless `*Content` composables directly (no Koin),
+  emulator): exercise the stateless `*Content` composables directly (no Koin),
   one test class per screen —
   `LoginContentTest`, `AddVisitorContentTest`, `UserContentTest`,
   `PaymentContentTest` (amount/method selection → callbacks, pay enable/disable, in-progress spinner
@@ -318,7 +324,10 @@ the current Snackbar) and the payment success-poll are also fan-out/polish items
   `SettingsContentTest` (section/labels, switch checked-state + toggle callback via `isToggleable()`),
   `HistoryListContentTest` (empty + formatted plate + row → open id), `ParkingDetailContentTest`
   (missing placeholder, details + stop callback), `HistoryDetailContentTest`, `ParkingMeterContentTest`
-  (renders id/name/distance, row → select). The `*Content` composables tested were made `internal`
+  (renders id/name/distance, row → select), `HeaderViewTest` (logged-out hides balance/menu;
+  balance display; logo → onInfo; balance row → onBalanceTap; each overflow-menu item → callback),
+  `InfoScreenTest` (header + external links + version line), `LoadingScreenTest` (indeterminate
+  spinner via `ProgressBarRangeInfo`). The `*Content` composables tested were made `internal`
   (visible to the androidTest source set); strings read via `targetContext.getString`. Gotchas baked
   into assertions: `LicensePlate`/`SectionHeader` reformat their text (`12ABC3`→`12-ABC-3`, headers
   get a trailing `:`), and `SuccessButton(wait=true)` replaces its label with a spinner. The stock
