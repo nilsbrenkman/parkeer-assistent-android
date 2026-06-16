@@ -23,7 +23,7 @@ class ApiErrorHandlerTest {
         val m = launch(UnconfinedTestDispatcher(testScheduler)) { bus.messages.toList(messages) }
         val u = launch(UnconfinedTestDispatcher(testScheduler)) { handler.unauthorized.toList(unauthorized) }
 
-        handler.handle(ApiException.Unauthorized)
+        handler.handle(ApiException.Unauthorized())
 
         assertEquals(1, unauthorized.size)
         assertTrue(messages.isEmpty())

@@ -17,3 +17,8 @@ local.properties
 .idea
 .claude
 .kotlin
+
+# Release signing — never commit the keystore or its passwords
+keystore.properties
+*.jks
+*.keystore

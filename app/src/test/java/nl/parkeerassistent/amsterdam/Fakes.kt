@@ -159,10 +159,12 @@ class FakePaymentRepository : PaymentRepository {
 class FakeGeoRepository : GeoRepository {
     var nearby = listOf<ParkingMeter>()
     var inRegion = listOf<ParkingMeter>()
+    var details: ParkingMeter? = null
     var throwOnNearby: Throwable? = null
     override suspend fun parkingMetersNearby(lat: Double, lon: Double, n: Int): List<ParkingMeter> {
         throwOnNearby?.let { throw it }
         return nearby
     }
     override suspend fun parkingMetersInRegion(lat: Double, lon: Double): List<ParkingMeter> = inRegion
+    override suspend fun parkingMeterDetails(id: Long): ParkingMeter? = details
 }

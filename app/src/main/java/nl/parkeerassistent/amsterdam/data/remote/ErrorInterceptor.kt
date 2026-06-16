@@ -17,14 +17,18 @@ class ErrorInterceptor(private val cookieJar: SessionCookieJar) : Interceptor {
         val response = chain.proceed(chain.request())
         if (response.isSuccessful) return response
 
-        return when (response.code) {
+        when (response.code) {
             401, 403 -> {
                 response.close()
                 cookieJar.clear()
-                throw ApiException.Unauthorized
+                throw ApiException.Unauthorized()
+            }
+            404 -> {
+                response.close()
+                throw ApiException.NotFound()
             }
             else -> {
-                val body = response.body?.string().orEmpty()
+                val body = response.body.string()
                 response.close()
                 throw ApiException.ServerError(body)
             }

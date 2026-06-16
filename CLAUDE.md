@@ -31,6 +31,16 @@ flavors.
 | `./gradlew test --tests "nl.parkeerassistent.amsterdam.SomeTest"` | Single test class |
 | `./gradlew connectedAndroidTest` | Instrumented/Compose tests (needs a device) |
 | `./gradlew lint` | Android Lint |
+| `./gradlew bundleRelease` | Build the Play release **AAB** (`app/build/outputs/bundle/release/`) — R8 minify + resource shrink on |
+
+**Release signing & build:** the `release` build type has `isMinifyEnabled`/`isShrinkResources`
+on (R8), so keep rules in `app/proguard-rules.pro` matter — they cover kotlinx.serialization
+models (`data/model/**`), Retrofit `*Api` interfaces, and OkHttp's optional providers. Signing is
+read from a **git-ignored `keystore.properties`** at the module root (copy
+`keystore.properties.template`; create the upload keystore with the `keytool` command in it, then
+use Play App Signing). When that file is **absent**, the release build still configures and
+produces an (unsigned) AAB rather than failing — so CI/fresh checkouts work, but a publishable
+build needs the keystore present. Play wants the AAB from `bundleRelease`, not an APK.
 
 **Running/verifying on the emulator** (SDK tools under `~/Library/Android/sdk/{platform-tools,emulator}`, not on PATH):
 boot the available AVD headless — check `emulator -list-avds` (currently `Pixel_4`) —
@@ -97,7 +107,14 @@ Retrofit/OkHttp → server**. DI is **Koin**; navigation is **Navigation-Compose
   so `Icons.*` are available (e.g. `HeaderView` menu items). It's a large artifact — R8 strips unused
   icons in release, but debug builds carry the full set. Existing text glyphs (`←`, `✓`, `≡`) are fine
   to keep where they already work.
-- **No Google Maps API key** — the parking-meter picker is a distance-sorted *list*, not a map.
+- **Meter picker is a MapLibre map** (`ui/screen/ParkingMeterScreen.kt`), mirroring iOS MapKit —
+  no Google Maps (no API key/billing). MapLibre GL Native (`org.maplibre.gl:android-sdk`) +
+  annotation plugin (`SymbolManager`) inside an `AndroidView`; meters are id-badge markers, tapping
+  one selects it, panning re-fetches (50 m guard). Vector tiles come from a **self-hosted Protomaps
+  style** at `BuildConfig.MAP_STYLE_URL` (`https://parkeerassistent.nl/tiles/styles/amsterdam/style.json`),
+  served by a custom tileserver-gl image with a baked Amsterdam extract + style (`../k8s/tileserver/`).
+  The map can't be visually verified in `@Preview`/Compose tests (GL surface) — they render only the
+  title bar; verify on a device. Keep rules for MapLibre live in `proguard-rules.pro`.
 - **`BuildConfig.VERSION_NAME/CODE` aren't generated** — read version from `PackageManager`.
 - **Not testable on the bare emulator:** biometric login (no enrolled fingerprint → degrades to
   manual), notifications (fire at real parking times), Play In-App Review (needs Play distribution).
