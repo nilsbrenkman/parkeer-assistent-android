@@ -48,6 +48,7 @@ import nl.parkeerassistent.amsterdam.BuildConfig
 import nl.parkeerassistent.amsterdam.R
 import nl.parkeerassistent.amsterdam.data.model.ParkingMeter
 import nl.parkeerassistent.amsterdam.data.model.ParkingMeterType
+import nl.parkeerassistent.amsterdam.location.FusedLocationEngine
 import nl.parkeerassistent.amsterdam.location.LocationProvider
 import nl.parkeerassistent.amsterdam.ui.components.TitleBar
 import nl.parkeerassistent.amsterdam.ui.parkingmeter.ParkingMeterViewModel
@@ -314,7 +315,13 @@ private fun enableUserLocation(
     if (!hasPermission) return
     map.locationComponent.apply {
         activateLocationComponent(
-            LocationComponentActivationOptions.builder(context, style).build(),
+            // Use the fused-client-backed engine so the location component honours coarse-only
+            // permission. MapLibre's default engine falls back to the "passive" LocationManager
+            // provider, which requires ACCESS_FINE_LOCATION and throws a SecurityException.
+            LocationComponentActivationOptions.builder(context, style)
+                .locationEngine(FusedLocationEngine(context))
+                .useDefaultLocationEngine(false)
+                .build(),
         )
         isLocationComponentEnabled = true
         // Follow the GPS dot so the map centres on the user once the first fix arrives (relying on
