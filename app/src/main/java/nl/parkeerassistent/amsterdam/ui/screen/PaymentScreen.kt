@@ -59,7 +59,7 @@ fun PaymentScreen(paymentVm: PaymentViewModel = koinViewModel()) {
         onAmount = { amount = it },
         onMethod = { method = it },
         onPay = {
-            paymentVm.payment(amount.toLong(), method, lang = "nl") { url ->
+            paymentVm.payment(amount.toLong(), method, lang = "NL") { url ->
                 context.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
             }
         },
