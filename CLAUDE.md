@@ -115,6 +115,14 @@ Retrofit/OkHttp → server**. DI is **Koin**; navigation is **Navigation-Compose
   served by a custom tileserver-gl image with a baked Amsterdam extract + style (`../k8s/tileserver/`).
   The map can't be visually verified in `@Preview`/Compose tests (GL surface) — they render only the
   title bar; verify on a device. Keep rules for MapLibre live in `proguard-rules.pro`.
+  - **MapLibre user-location dot needs a coarse-friendly engine.** The app is **coarse-only**
+    (`ACCESS_COARSE_LOCATION`; `LocationProvider` uses the fused client). MapLibre's default location
+    engine routes through the platform `LocationManager` and falls back to the **"passive"** provider
+    when `getBestProvider` returns null (emulator / coarse-only), which requires
+    `ACCESS_FINE_LOCATION` → caught `SecurityException`, no blue dot. Fix: activate the
+    `LocationComponent` with `location/FusedLocationEngine.kt` (a `LocationEngine` backed by Google's
+    `FusedLocationProviderClient`, `.useDefaultLocationEngine(false)`) — it honours coarse permission
+    and never touches the passive provider. **Don't add `ACCESS_FINE_LOCATION`** to "fix" this.
 - **`BuildConfig.VERSION_NAME/CODE` aren't generated** — read version from `PackageManager`.
 - **Not testable on the bare emulator:** biometric login (no enrolled fingerprint → degrades to
   manual), notifications (fire at real parking times), Play In-App Review (needs Play distribution).
