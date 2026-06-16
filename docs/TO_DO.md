@@ -44,9 +44,10 @@ Legend: ✅ done · ⬜ open · 🔲 deferred polish (not a blocker)
 
 - ⬜ **8 — Versioning.** `versionCode = 1` / `versionName = "1.0"` — confirm intentional for first
   release. Note `BuildConfig.VERSION_*` isn't generated; app reads version from `PackageManager`.
-- ⬜ **9 — Backup rules.** `backup_rules.xml` / `data_extraction_rules.xml` are stock templates
-  while `allowBackup="true"`. Keystore-encrypted `CredentialStore` can't restore across devices and
-  session cookies shouldn't be backed up — exclude those prefs or set `allowBackup="false"`.
+- ✅ **9 — Backup rules.** Set `allowBackup="false"` and removed the stock `backup_rules.xml` /
+  `data_extraction_rules.xml` (with their `fullBackupContent`/`dataExtractionRules` manifest refs).
+  Keystore-encrypted `CredentialStore` can't restore across devices and session cookies shouldn't
+  be backed up.
 - ⬜ **10 — Real-device verification.** Biometric login, local notifications (fire at real parking
   times), and Play In-App Review aren't exercisable on the bare emulator. Validate via an
   internal-testing track build.
