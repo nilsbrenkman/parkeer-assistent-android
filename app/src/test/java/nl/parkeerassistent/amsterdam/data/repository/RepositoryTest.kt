@@ -2,15 +2,20 @@ package nl.parkeerassistent.amsterdam.data.repository
 
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
+import nl.parkeerassistent.amsterdam.FakeSessionCookieStore
+import nl.parkeerassistent.amsterdam.data.remote.ErrorInterceptor
 import nl.parkeerassistent.amsterdam.data.remote.GeoApi
 import nl.parkeerassistent.amsterdam.data.remote.LoginApi
 import nl.parkeerassistent.amsterdam.data.remote.ParkingApi
 import nl.parkeerassistent.amsterdam.data.remote.VisitorApi
+import nl.parkeerassistent.amsterdam.data.remote.cookie.SessionCookieJar
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -106,5 +111,24 @@ class RepositoryTest {
         val path = server.takeRequest().path!!
         assertTrue(path.startsWith("/geo/parking-meters/nearby"))
         assertTrue(path.contains("lat=52.3") && path.contains("lon=4.9") && path.contains("n=25"))
+    }
+
+    @Test fun `parkingMeterDetails decodes the meter and puts the id in the path`() = runBlocking {
+        enqueue("""{"id":5,"domein":1,"name":"Nieuwmarkt","type":"METER","latitude":52.3,"longitude":4.9}""")
+        val meter = GeoRepositoryImpl(retrofit.create<GeoApi>()).parkingMeterDetails(5)
+
+        assertEquals("Nieuwmarkt", meter?.name)
+        assertEquals("/geo/parking-meters/5", server.takeRequest().path)
+    }
+
+    @Test fun `parkingMeterDetails returns null on 404`() = runBlocking {
+        // The 404-to-null mapping lives in the ErrorInterceptor, so wire it into the client here.
+        server.enqueue(MockResponse().setResponseCode(404))
+        val client = OkHttpClient.Builder()
+            .addInterceptor(ErrorInterceptor(SessionCookieJar(FakeSessionCookieStore())))
+            .build()
+        val api = retrofit.newBuilder().client(client).build().create<GeoApi>()
+
+        assertNull(GeoRepositoryImpl(api).parkingMeterDetails(99))
     }
 }

@@ -30,4 +30,14 @@ class ParkingMeterViewModel(
             }
         }
     }
+
+    /** Details for the active meter, or `null` if unknown / on failure (so callers fall back). */
+    suspend fun details(id: Long): ParkingMeter? =
+        try {
+            geoRepository.parkingMeterDetails(id)
+        } catch (e: Exception) {
+            Log.error("parking meter details failed", e)
+            errorHandler.handle(e)
+            null
+        }
 }

@@ -9,9 +9,10 @@ import java.io.IOException
 sealed class ApiException(message: String?) : IOException(message) {
 
     /** 401/403 — the session is no longer valid; cookies are cleared. */
-    data object Unauthorized : ApiException("Unauthorized") {
-        private fun readResolve(): Any = Unauthorized
-    }
+    class Unauthorized : ApiException("Unauthorized")
+
+    /** 404 — the requested resource does not exist. */
+    class NotFound : ApiException("Not Found")
 
     /** Any other non-2xx response; [serverMessage] is the raw response body. */
     class ServerError(val serverMessage: String) : ApiException(serverMessage)

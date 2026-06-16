@@ -60,7 +60,7 @@ class SessionViewModelTest {
     }
 
     @Test fun `login that throws Unauthorized is handled without logging in`() {
-        loginRepo.throwOnLogin = ApiException.Unauthorized
+        loginRepo.throwOnLogin = ApiException.Unauthorized()
         val vm = viewModel()
 
         vm.login("u", "p", storeCredentials = false)
@@ -83,7 +83,7 @@ class SessionViewModelTest {
         vm.login("u", "p", storeCredentials = false)
         assertTrue(vm.state.value.isLoggedIn)
 
-        errorHandler.handle(ApiException.Unauthorized)
+        errorHandler.handle(ApiException.Unauthorized())
 
         assertFalse(vm.state.value.isLoggedIn)
     }

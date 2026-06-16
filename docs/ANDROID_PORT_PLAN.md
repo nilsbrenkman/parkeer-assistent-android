@@ -56,6 +56,7 @@ util/           Log, License, date/format helpers
 | Payment | `POST payment` | `PaymentRequest` → `PaymentResponse` (`{ url }` only) |
 | Geo | `GET geo/parking-meters/nearby?lat&lon&n=25` | → `List<ParkingMeter>` |
 | Geo | `GET geo/parking-meters/in-region?lat&lon` | → `List<ParkingMeter>` |
+| Geo | `GET geo/parking-meters/{id}` | → `ParkingMeter` (404 → `null`; centres the picker on the active meter) |
 
 Session is cookie-based: the server **requires a `token` cookie and a `product_id` cookie** on
 authenticated requests. `token` is set on login; `product_id` is set by `GET user` (so the app
@@ -243,9 +244,11 @@ ViewModel-bound screens were refactored into a stateless `…Content` (state in,
 the VM wrapper delegating, and the preview renders the content with sample data. Only
 `RegimeDatePickerDialog` has no static preview (dialogs don't render in a static preview).
 
-**Remaining (TODO):** Account/AccountDetail (with P7 Keychain), the map-based meter picker
-(P7), and replacing the `Accounts` placeholder. The iOS confirmation-dialog message style (vs
-the current Snackbar) and the payment success-poll are also fan-out/polish items.
+**Remaining (TODO):** Account/AccountDetail (with P7 Keychain) and replacing the `Accounts`
+placeholder. The map-based meter picker is now **done** (MapLibre — see the Phase 7 location/meter
+bullet), pending only the self-hosted tile style on the server/k8s. The iOS confirmation-dialog
+message style is **settled** (keeping Snackbars by decision); the payment success-poll remains a
+polish item.
 
 ### Phase 7 — Platform integrations (most rework, least 1:1)
 - ✅ **Saved credentials** (`util/Keychain`) → `data/local/CredentialStore` over
@@ -282,9 +285,13 @@ the current Snackbar) and the payment success-poll are also fan-out/polish items
   `ui/parkingmeter/ParkingMeterViewModel` (over the existing `GeoRepository`), and
   `ui/screen/ParkingMeterScreen` reached from AddParking's **Bord** box. Selecting a meter calls
   the shared `UserViewModel.setParkingMeter` (updates zone/regime/cost). Permissions
-  `ACCESS_FINE/COARSE_LOCATION` requested in-screen. **Substitution:** iOS uses a MapKit map; a
-  Google Map needs a Maps API key the project lacks, so this is a **distance-sorted list** (same
-  data + selection path) — swap in `maps-compose` + a key later for the visual map.
+  `ACCESS_FINE/COARSE_LOCATION` requested in-screen. **Map:** iOS uses MapKit; Android uses
+  **MapLibre GL Native** (`org.maplibre.gl:android-sdk` + annotation-plugin `SymbolManager` in an
+  `AndroidView`) — no Google Maps key/billing. Meters are id-badge markers, tapping one selects it,
+  panning re-fetches (50 m guard), camera bounded to Amsterdam. Tiles are a **self-hosted Protomaps
+  vector style** via `BuildConfig.MAP_STYLE_URL`, served by a custom tileserver-gl image (baked
+  Amsterdam extract + style) in `../k8s/tileserver/` behind `parkeerassistent.nl/tiles/`. Confirmed
+  rendering on a device; the GL map isn't exercisable in Compose tests (they assert the title bar only).
 - ✅ **i18n** — `res/values/strings.xml` (**English, default**) + `res/values-nl/strings.xml`
   (Dutch), ported from the iOS `Language.strings` (all `Lang` keys, snake_case). Every screen uses
   `stringResource`; ViewModels/`ApiErrorHandler` use a `util/StringProvider` (Koin singleton over

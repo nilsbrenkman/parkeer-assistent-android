@@ -70,6 +70,7 @@
     <string name="parking_no_history">No parking history found</string>
     <string name="parking_free_parking">You can park for free today</string>
     <string name="parking_sign">Sign</string>
+    <string name="meter_my_location">Center on my location</string>
     <string name="parking_invalid_zone">Invalid zone</string>
 
     <!-- Payment -->

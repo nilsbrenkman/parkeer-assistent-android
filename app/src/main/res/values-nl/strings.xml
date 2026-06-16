@@ -68,6 +68,7 @@
     <string name="parking_no_history">Geen parkeer geschiedenis gevonden</string>
     <string name="parking_free_parking">U kan in vandaag gratis parkeren</string>
     <string name="parking_sign">Bord</string>
+    <string name="meter_my_location">Centreer op mijn locatie</string>
     <string name="parking_invalid_zone">Ongeldige zone</string>
 
     <!-- Payment -->

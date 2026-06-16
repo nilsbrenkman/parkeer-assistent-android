@@ -17,9 +17,7 @@ class LocationProvider(private val context: Context) {
     private val client = LocationServices.getFusedLocationProviderClient(context)
 
     fun hasPermission(): Boolean =
-        ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) ==
-            PackageManager.PERMISSION_GRANTED ||
-            ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) ==
+        ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) ==
             PackageManager.PERMISSION_GRANTED
 
     /** Returns lat/lon, or null if unavailable (no permission / no fix). */

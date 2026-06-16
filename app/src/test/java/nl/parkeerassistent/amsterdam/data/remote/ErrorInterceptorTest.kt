@@ -9,7 +9,6 @@ import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Before
@@ -48,7 +47,7 @@ class ErrorInterceptorTest {
             call(store)
             fail("expected ApiException.Unauthorized")
         } catch (e: ApiException) {
-            assertSame(ApiException.Unauthorized, e)
+            assertTrue(e is ApiException.Unauthorized)
         }
         assertTrue(store.cleared)
         assertTrue(store.map.isEmpty())
@@ -61,7 +60,7 @@ class ErrorInterceptorTest {
             call(store)
             fail("expected ApiException.Unauthorized")
         } catch (e: ApiException) {
-            assertSame(ApiException.Unauthorized, e)
+            assertTrue(e is ApiException.Unauthorized)
         }
         assertTrue(store.cleared)
     }
