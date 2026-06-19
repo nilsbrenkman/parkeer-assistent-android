@@ -213,7 +213,7 @@ internal fun AddParkingContent(
     onAdd: () -> Unit,
 ) {
     Column(Modifier.fillMaxSize()) {
-        TitleBar(title = stringResource(R.string.parking_header))
+        TitleBar(title = stringResource(R.string.parking_start))
         Column(
             verticalArrangement = Arrangement.spacedBy(Dimens.spacingSmall),
             modifier = Modifier
