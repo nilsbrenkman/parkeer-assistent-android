@@ -42,7 +42,14 @@ class UserViewModelTest {
     }
 
     @Test fun `getBalance recomputes the time balance from the hour rate`() {
-        repo.userResponse = UserResponse("20.00", 2.40, 1, 2, 3, Regime(emptyList()))
+        repo.userResponse = UserResponse(
+            balance = "20.00",
+            hourRate = 2.40,
+            productId = 1,
+            parkingMeterId = 2,
+            zoneId = 3,
+            regime = Regime(emptyList())
+        )
         val vm = viewModel()
         vm.getUser()
 
