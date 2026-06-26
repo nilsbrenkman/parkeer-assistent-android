@@ -19,8 +19,8 @@ securityCrypto = "1.1.0"
 biometric = "1.1.0"
 fragment = "1.8.9"
 playReview = "2.0.2"
-playServicesLocation = "21.3.0"
-maplibre = "13.3.0"
+playServicesLocation = "21.4.0"
+maplibre = "13.3.1"
 maplibreAnnotation = "3.0.2"
 
 [libraries]
